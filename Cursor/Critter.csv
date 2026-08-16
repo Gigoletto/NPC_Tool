@@ -1,0 +1,259 @@
+Name;Kategorie;Konstitution;Geschick;Reaktion;Stärke;Willenskraft;Logik;Intuition;Charisma;Initiative;Edge;Magie;Quelle;Seite;Rüstung
+Hund;Mundane Critter;11;10;11;11;10;9;11;10;22;6;3;SR5;402;
+Großkatze;Mundane Critter;13;12;11;12;10;9;10;10;22;6;3;SR5;402;
+Pferd;Mundane Critter;15;12;12;15;10;9;10;11;22;5;3;SR5;403;
+Hai;Mundane Critter;12;11;12;12;10;8;11;8;23;5;3;SR5;403;
+Wolf;Mundane Critter;13;10;12;12;10;9;11;10;23;6;3;SR5;403;
+Teufelsratte;Paranormale Critter;2;5;5;1;3;2;5;5;16;5;6;SR5;404;
+Ghul;Paranormale Critter;7;3;5;6;5;2;4;1;15;6;5;SR5;404;
+Höllenhund;Paranormale Critter;6;4;5;6;4;2;4;3;15;6;8;SR5;405;
+Barghest;Paranormale Critter;8;5;6;6;4;2;5;5;15;7;8;SR5;403;
+Sasquatch;Paranormale Critter;8;3;4;7;3;3;5;3;12;7;7;SR5;406;
+Vampir;Paranormale Critter;4;3;5;4;4;3;4;5;15;6;6;SR5;406;
+Schreckhahn;Paranormale Critter;4;5;4;4;4;2;3;1;12;4;8;SR5;404;
+Basilisk;Paranormale Critter;6;3;3;7;5;1;3;1;12;1;6;SR5;404;
+Bär;Mundane Critter;16;11;12;15;11;8;9;10;21;6;3;HS;39;
+Seelöwe;Mundane Critter;14;11;11;12;10;8;11;9;22;6;3;HS;43;
+Tintenfisch;Mundane Critter;11;12;10;12;9;9;11;10;21;6;3;HS;43;
+Delphin;Mundane Critter;15;12;12;14;11;9;11;11;23;6;3;HS;42;
+Barrakuda;Mundane Critter;9;9;10;9;9;7;9;8;19;6;3;HS;42;
+Orca;Mundane Critter;19;13;13;20;15;9;12;9;25;6;3;HS;43;
+Alligator;Mundane Critter;15;12;11;16;8;8;9;9;20;6;3;HS;39;
+Wildschwein;Mundane Critter;13;9;11;12;9;8;9;9;20;5;3;HS;39;
+Ratte;Mundane Critter;8;10;9;7;8;8;8;8;17;6;3;HS;46;
+Elefant;Mundane Critter;19;11;11;23;9;9;10;10;21;5;3;HS;41;
+Giraffe;Mundane Critter;17;10;10;15;9;8;9;9;19;5;3;HS;41;
+Schimpanse;Mundane Critter;11;11;11;11;10;9;11;10;22;6;3;HS;40;
+Hauskatze;Mundane Critter;9;11;10;8;9;9;9;10;19;6;3;HS;45;
+Frettchen;Mundane Critter;8;9;9;8;10;8;9;9;18;6;3;HS;46;
+Waschbär;Mundane Critter;8;11;10;8;10;8;11;9;21;5;3;HS;46;
+Schlange;Mundane Critter;9;11;9;10;9;7;9;8;18;6;3;HS;42;
+Küchenschabe;Mundane Critter;8;9;12;7;9;7;9;7;21;5;3;HS;45;
+Spinne;Mundane Critter;8;9;9;7;8;7;8;8;17;6;3;HS;47;
+Krähe;Mundane Critter;9;10;9;8;9;8;12;10;21;5;3;HS;45;
+Adler;Mundane Critter;10;12;11;9;10;8;11;10;22;7;3;HS;41;
+Salzwasserkrokodil;Mundane Critter;16;14;11;16;10;8;10;9;20;6;3;HS;39;
+Abramshummer;Paranormale Critter;4;3;2;7;3;4;3;1;16;5;6;HS;53;
+Merrow;Paranormale Critter;5;3;5;5;3;3;3;3;16;3;6;HS;68;
+Naga;Paranormale Critter;5;2;4;6;4;3;4;3;14;4;6;HS;68;
+Wendigo (Magier);Paranormale Critter;8;3;5;6;4;3;4;4;12;6;6;HS;91;
+Wendigo (Magieradept);Paranormale Critter;8;3;5;6;4;3;4;4;12;6;6;HS;91;
+Harpyie;Paranormale Critter;4;5;4;4;2;2;3;1;13;1;6;HS;62;
+Donnervogel, Größerer;Paranormale Critter;4;3;7;8;3;2;4;1;17;1;9;HS;73;
+Rock;Paranormale Critter;4;5;4;4;2;2;4;1;14;1;6;HS;71;
+Schattenhund;Paranormale Critter;4;4;4;5;3;2;4;1;14;1;7;HS;71;
+Novaskorpion;Paranormale Critter;4;4;4;3;3;2;5;1;15;2;6;HS;69;
+Oz-Pavian;Paranormale Critter;5;5;4;4;2;2;5;4;14;2;7;HS;69;
+Teufelshecht;Paranormale Critter;5;4;5;5;2;1;3;2;14;2;6;HS;59;
+Zentaur;Paranormale Critter;7;3;3;7;3;3;3;3;12;1;6;HS;56;
+Moloch;Paranormale Critter;20;6;5;42;9;1;3;1;14;4;9;HS;65;
+Pegasus;Paranormale Critter;8;5;6;7;3;2;4;2;16;2;7;HS;70;
+Peryton;Paranormale Critter;8;5;5;7;4;2;4;2;16;1;7;HS;71;
+Einhorn;Paranormale Critter;7;5;5;9;4;2;4;6;15;2;8;HS;76;
+Meistersinger;Paranormale Critter;20;5;4;30;8;3;4;5;14;3;9;HS;66;
+Gomatia;Paranormale Critter;6;3;1;6;3;2;6;1;12;2;6;HS;62;
+Grottenschrat;Paranormale Critter;3;3;4;2;3;2;3;2;13;1;5;HS;75;
+Zerberus;Paranormale Critter;6;4;5;6;4;2;6;3;17;2;8;HS;56;
+Todesklapper;Paranormale Critter;3;6;8;4;2;1;5;2;17;2;7;HS;57;
+Todesspiralenfalter;Paranormale Critter;1;4;5;1;4;2;4;6;17;2;9;HS;58;
+Hornbär;Paranormale Critter;13;4;4;13;5;4;4;1;14;2;8;HS;64;
+Schneeschlange;Paranormale Critter;2;7;5;2;2;1;4;1;14;1;6;HS;71;
+Monsterspinne;Paranormale Critter;2;4;4;2;3;1;3;1;14;1;9;HS;73;
+Agropelzer;Paranormale Critter;2;3;4;2;2;4;4;1;14;4;6;HS;53;
+Killermandrill;Paranormale Critter;8;4;5;9;3;2;3;2;14;2;7;HS;55;
+Blutaffe;Paranormale Critter;3;5;3;4;4;2;2;3;14;2;8;HS;55;
+Fenriswolf;Paranormale Critter;7;5;4;8;5;2;5;2;15;2;8;HS;61;
+Mantikor;Paranormale Critter;7;5;5;6;3;2;4;1;15;1;6;HS;65;
+Phönixartige;Paranormale Critter;3;5;4;4;2;2;4;1;14;4;8;HS;70;
+Piasma;Paranormale Critter;12;5;5;12;4;2;4;1;15;2;6;HS;71;
+Bombardier-Stachelschwein;Paranormale Critter;2;4;2;2;3;1;3;2;11;2;7;HS;76;
+Riesenvielfraß;Paranormale Critter;7;6;5;5;4;2;4;1;15;1;6;HS;77;
+Teufelsanbeterin;Paranormale Critter;4;4;4;3;3;2;4;2;14;3;7;RW;151;
+Bandit;Paranormale Critter;2;4;3;2;3;3;5;3;14;2;6;HS;54;
+Dämonenratte;Paranormale Critter;5;5;5;4;4;4;5;5;16;3;9;HS;59;
+Gargyl;Paranormale Critter;10;4;5;10;4;2;4;1;15;1;8;HS;61;
+Afanc;Paranormale Critter;10;4;4;8;4;2;4;2;14;2;7;HS;53;
+Behemoth;Paranormale Critter;14;4;3;18;5;2;2;1;11;1;6;HS;54;
+Amphorenwanze;Mutierte Critter;4;6;6;4;5;6;5;5;;7;;HS;92;0
+Engelshörnchen;Mutierte Critter;5;9;8;5;6;6;8;5;;5;10;HS;93;1
+Blitzfaultier;Mutierte Critter;10;12;15;9;8;5;9;8;;6;;HS;93;4
+Conways Gepard;Mutierte Critter;11;12;10;10;9;6;10;8;;7;10;HS;94;6
+Giftplattwurm;Mutierte Critter;5;6;6;5;5;6;5;5;;7;;HS;95;0
+Glühratte;Toxische Critter;6;9;9;5;7;6;9;9;;2;6;HS;95;
+Höllenkuh;Mutierte Critter;14;7;7;12;5;5;5;5;;6;;HS;96;10
+Schilleruhu;Mutierte Critter;8;10;9;7;10;6;8;9;;7;;HS;97;6H
+Killdeer;Mutierte Critter;9;10;9;9;5;5;9;8;;2;;HS;97;
+Neogargyl;Mutierte Critter;5;7;6;5;5;7;7;7;11;3;6;HS;99;
+Meeresegel;Toxische Critter;11;7;6;12;5;7;8;7;11;4;6;HS;102;
+Razorcat (small);Toxische Critter;4;5;8;2;3;2;5;4;12;9;6;HS;102;
+Razorcat (large);Toxische Critter;7;6;8;6;4;2;6;5;12;6;6;HS;102;
+Kokoro-Kobra;Toxische Critter;11;8;9;5;6;2;6;2;15;2;6;HS;98;
+Montauk;Toxische Critter;2;4;3;2;3;5;3;3;6;2;4;HS;99;
+Pandamonium;Mutierte Critter;6;4;5;8;3;1;5;4;9;3;0;HS;100;
+Strahlenhund (klein);Toxische Critter;6;4;5;4;3;2;6;4;11;3;6;HS;101;
+Strahlenhund (groß);Toxische Critter;6;8;5;7;1;1;3;3;11;3;6;HS;101;
+Shardik;Toxische Critter;16;8;6;14;6;4;6;5;12;4;6;HS;104;
+Zitterlachs;Toxische Critter;3;4;4;4;2;1;5;2;10;2;6;HS;104;
+Spinnenelch;Toxische Critter;10;4;4;8;2;1;3;2;7;2;6;HS;105;
+Seelenegel;Toxische Critter;1;1;1;1;2;1;1;1;2;1;6;HS;106;
+Leerenwespe;Toxische Critter;1;8;11;1;1;1;5;5;16;1;6;HS;106;
+Knochengeist;Geister;F+3;F;F;F+2;F;F;F-1;F-1;(F*2);F/2;F;FA;134;
+Blutschatten;Geister;F;F+2;F+2;F-1;F;F;F;F+1;(F*2)+2;F/2;F;FA;135;
+Abscheulichkeit;Toxische Geister;F+2;F+1;F;F+2;F;F;F;F;(F*2)+2;F/2;F;SG;87;
+Ödnis;Toxische Geister;F+4;F-2;F-1;F+4;F;F-1;F;F;(F*2)+3;F/2;F;SG;88;
+Nuklear;Toxische Geister;F+1;F+2;F+3;F-2;F;F;F+1;F;(F*2)+3;F/2;F;SG;88;
+Schlamm;Toxische Geister;F+1;F+1;F+2;F;F;F;F;F;(F*2)+2;F/2;F;SG;88;
+Seuche;Toxische Geister;F;F;F+2;F-2;F;F;F+1;F;(F*2)+2;F/2;F;SG;88;
+Smog;Toxische Geister;F-2;F+3;F+4;F-3;F;F;F;F;(F*2)+3;F/2;F;SG;87;
+Keramikgeist;Geister;F;F+1;F+2;F;F;F;F;F;(F*2)+2;F/2;F;FA;180;
+Metallgeist;Geister;F+4;F-2;F-1;F+4;F;F-1;F;F;(F*2)+2;F/2;F;FA;180;
+Energiegeist;Geister;F+1;F+2;F+3;F-2;F;F;F+1;F;(F*2)+3;F/2;F;FA;180;
+Radiowellengeist;Geister;F-2;F+3;F+4;F-3;F;F;F;F;(F*2)+4;F/2;F;FA;180;
+Schiffsgeist;Geister;F+4;F-1;F-1;F+2;F;F-2;F;F;(F*2)-1;F/2;F;FA;180;F
+Eisenbahngeist;Geister;F+3;F-1;F-1;F+2;F+1;F-2;F;F;(F*2)-1;F/2;F;FA;181;F
+Bodenfahrzeuggeist;Geister;F+1;F+2;F+1;F;F;F-2;F;F;(F*2)+1;F/2;F;FA;181;0
+Flugzeuggeist;Geister;F+2;F+1;F;F+1;F;F-2;F;F;(F*2);F/2;F;FA;181;0
+Harzkröte (Dämon);Geister;F+7;F-2;F;F+2;F-1;F;F;F+1;(F*2)+2;F;F;AET;34;
+Krabbler (Dämon);Geister;F+4;F;F+3;F+6;F-1;F;F+3;F-1;(F*2)+6;F;F;AET;34;
+Ghasts (Dämon);Geister;F+2;F;F+2;F;F;F;F;F;(F*2)+2;F;F;AET;35;
+Vrygoth;Geister;F+4;F;F;F+3;F;F+2;F;F;(F*2);F;F;AET;36;
+Gremlin;Geister;F;F;F+3;F;F;F;F;F;(F*2)+3;F;F;AET;36;
+Anansi;Geister;F;F+2;F+2;F;F;F;F;F;(F*2)+2;F;F;AET;37;
+Tsuchigumo-Krieger;Geister;F+2;F+2;F+1;F+3;F;F;F;F;(F*2)+1;F;F;AET;38;
+Pfleger;Insektengeister;F;F+1;F+1;F;F;F;F;F;(F*2)+1;F/2;F;SG;98;
+Nymphe;Insektengeister;F-1;F;F+3;F-1;F;F;F;F;(F*2)+3;F/2;F;SG;98;
+Späher;Insektengeister;F;F+2;F+2;F;F;F;F;F;(F*2)+2;F/2;F;SG;98;
+Soldat;Insektengeister;F+3;F+1;F+1;F+3;F;F;F;F;(F*2)+1;F/2;F;SG;98;
+Arbeiter;Insektengeister;F;F;F;F+1;F;F;F;F;(F*2)+1;F/2;F;SG;99;
+Königin/Mutter;Insektengeister;F+5;F+3;F+4;F+5;F+1;F+1;F+1;F;(F*2)+4;F/2;F;SG;99;
+Shedim;Shedim;F;F;F+2;F+1;F;F;F;F;(F*2)+2;F/2;F;SG;93;
+Hopper;Shedim;F;F;F+4;F;F;F;F+2;F;(F*2)+6;F/2;F;DTR;50;
+Blade-Summoned;Shedim;F+1;F+3;F+2;F+1;F;F;F;F;(F*2)+2;F/2;F;DTR;50;
+Horror Show;Shedim;F+1;F+3;F+2;F+1;F;F;F;F;(F*2)+2;F/2;F;DTR;51;
+Unbreakable;Shedim;F+3;F+1;F+1;F+3;F;F-1;F;F;(F*2)+2;F/2;F;DTR;51;
+Master Shedim;Shedim;F;F;F+2;F+1;F+1;F+1;F+1;F;(F*2)+3;F/2;F;SG;93;
+Muse;Schattengeister;F;F+3;F+2;F;F+1;F;F+1;F+2;(F*2)+3;F/2;F;SG;92;
+Nachtmahr;Schattengeister;F;F+3;F+2;F;F+1;F;F+1;F+2;(F*2)+3;F/2;F;SG;92;
+Düsternis;Schattengeister;F;F+3;F+2;F;F+1;F;F+1;F+2;(F*2)+3;F/2;F;SG;92;
+Sukkubus;Schattengeister;F;F+3;F+2;F;F+1;F;F+1;F+2;(F*2)+3;F/2;F;SG;92;
+Wraith;Schattengeister;F;F+3;F+2;F;F+1;F;F+1;F+2;(F*2)+3;F/2;F;SG;92;
+Kadavergeist;Dunkelgeister;F+3;F;F;F+2;F;F;F;F-1;(F*2);F/2;F;FA;52;
+Leichengeist;Dunkelgeister;F+2;F-1;F+2;F-2;F;F;F+1;F-1;(F*2)+2;F/2;F;FA;53;
+Fahlfeuergeist;Dunkelgeister;F+2;F+1;F+3;F-2;F;F;F+1;F-1;(F*2)+3;F/2;F;FA;53;
+Fäulnisgeist;Dunkelgeister;F+3;F-1;F+2;F-2;F;F;F+1;F-1;(F*2)+2;F/2;F;FA;53;
+Geröllgeist;Dunkelgeister;F+5;F-3;F-1;F+4;F;F-1;F;F-1;(F*2)+2;F/2;F;FA;53;
+Anarch;Extraplanare Reisende;F-1;F-1;F+1;F-1;F;F;F;F;;F/2;F;HS;116;0
+Baumgeist;Extraplanare Reisende;F+2;F;F;F+1;F;F;F;F;;F;F;HS;116;0
+Blackjack;Extraplanare Reisende;F+2;F+1;F+1;F;F;F;F;F;;F/2;F;HS;117;
+Zersetzer;Extraplanare Reisende;F-2;F-1;F-1;F-2;F+2;F;F;F;;F/2;F;HS;117;
+Bugul;Extraplanare Reisende;;;;;;;;;;;;HS;118;0
+Chindi;Extraplanare Reisende;F+2;F+1;F+2;F+1;F;F;F;F;;F/2;F;HS;118;F*2
+Irrlicht;Extraplanare Reisende;9;14;14;5;9;6;9;5;;8;10;HS;118;12
+Croki;Extraplanare Reisende;F;F;F+2;F+2;F;F;F;F;;F;F;HS;120;0
+Duende;Extraplanare Reisende;F;F;F+2;F+2;F;F;F;F;;F;F;HS;121;0
+Elvar;Extraplanare Reisende;F;F;F+2;F+2;F;F;F;F;;F;F;HS;121;0
+Ejerian;Extraplanare Reisende;F;F;F;F;F;F;F;F;;F/2;F;HS;122;
+Erinnyen;Extraplanare Reisende;F-1;F+3;F+2;F;F;F;F;F;;F/2;F;HS;123;(F x 2)H
+Grüner Mann/Stadtherz;Extraplanare Reisende;F+3;F-1;F+2;F+4;F;F;F;F;;F/2;F;HS;123;0
+Kobold;Extraplanare Reisende;F;F;F+3;F;F;F;F;F;;F;F;HS;124;0
+Jarl;Extraplanare Reisende;F+2;F-1;F+2;F+2;F;F;F+2;F;;F/2;F;HS;125;0
+Kappa;Extraplanare Reisende;F+5;F;F-1;F+1;F;F;F;F;;F;F;HS;126;0
+Morbi;Extraplanare Reisende;F;F;F+1;F-2;F;F;F+1;F+2;;F/2;F;HS;128;0
+Nocnitsa;Extraplanare Reisende;F-3;F+4;F+5;F-2;F-1;F;F;F;;F/2;F;HS;129;
+Phantom;Extraplanare Reisende;F+1;F;F+2;F-2;F;F;F;F;;F/2;F;HS;130;0
+Preta;Extraplanare Reisende;F-1;F+1;F+2;F-1;F;F;F;F;;F/2;F;HS;131;F
+Tausendstecher;Extraplanare Reisende;F+1;F+4;F+2;F+4;F;F;F;F;;F/2;F;HS;132;(F x 2)H
+Tungak;Extraplanare Reisende;F+1;F;F+2;F-2;F;F;F;F;;F;F;HS;133;(F x 2)H
+Ver;Extraplanare Reisende;8;9;9;9;8;8;7;7;;8;10;HS;134;0
+Vucub-Caquix;Extraplanare Reisende;F+3;F+5;F+4;F+2;F;F;F+1;F+4;;F;F;HS;135;12H
+Watcher;Ritual;0;0;0;0;F-2;F-2;F-2;F-2;F*2;0;F;SR5;298;
+Homunkulus (zerbrechlich);Ritual;1;F-2;F-2;F;1;1;1;0;F+1;0;0;SR5;298;
+Homunkulus (billiges Material);Ritual;2;F-2;F-2;F;1;1;1;0;F+1;0;0;SR5;298;
+Homunkulus (durchschnittliches Material);Ritual;4;F-2;F-2;F;1;1;1;0;F+1;0;0;SR5;298;
+Homunkulus (schweres Material);Ritual;6;F-2;F-2;F;1;1;1;0;F+1;0;0;SR5;298;
+Homunkulus (verstärktes Material);Ritual;8;F-2;F-2;F;1;1;1;0;F+1;0;0;SR5;298;
+Homunkulus (tragendes Material);Ritual;10;F-2;F-2;F;1;1;1;0;F+1;0;0;SR5;298;
+Homunkulus (schweres tragendes Material);Ritual;12;F-2;F-2;F;1;1;1;0;F+1;0;0;SR5;298;
+Homunkulus (gepanzertes verstärktes Material);Ritual;14;F-2;F-2;F;1;1;1;0;F+1;0;0;SR5;298;
+Homunkulus (gehärtetes Material);Ritual;16;F-2;F-2;F;1;1;1;0;F+1;0;0;SR5;298;
+Wiedergänger;Ritual;F;F-2;F-2;F;1;1;1;1;F-1;0;0;HT;129;
+Östlicher Drache;Drakoformen;17;8;8;35;9;10;8;9;22;9;13;SR5;407;
+Gefiederte Schlange;Drakoformen;15;9;10;30;10;9;9;8;22;9;13;SR5;407;
+Westlicher Drache;Drakoformen;18;7;8;40;8;8;8;8;22;9;13;SR5;407;
+Vampir;Infizierte;4;3;5;4;4;3;4;5;15;6;6;HS;82;
+Bandersnatch;Infizierte;9;3;5;9;5;2;6;1;13;5;7;HS;87;
+Banshee;Infizierte;4;4;5;4;4;3;4;6;13;5;6;HS;87;
+Fallbär;Paranormale Critter;3;3;3;5;5;2;4;1;13;2;6;HS;60;
+Dzoo-Noo-Qua;Infizierte;9;2;5;9;4;2;4;1;14;5;6;HS;87;
+Fomoraig;Infizierte;10;2;4;10;4;1;3;1;13;5;6;HS;87;
+Nager;Infizierte;6;3;4;7;5;2;5;2;15;5;6;HS;87;
+Goblin;Infizierte;6;3;4;6;5;2;5;2;14;5;6;HS;88;
+Grendel;Infizierte;8;3;4;8;4;1;4;1;14;4;6;HS;88;
+Schnitter;Infizierte;5;4;6;6;4;1;5;1;17;5;6;HS;88;
+Werwolf;Infizierte;4;3;4;7;4;2;4;1;13;5;6;HS;89;
+Mutaqua;Infizierte;9;3;5;10;5;2;4;1;15;5;6;HS;90;
+Nosferatu;Infizierte;4;4;4;4;5;5;5;5;14;5;6;HS;91;
+Kriegshund;Kriegsformen;12;11;11;11;10;9;11;10;22;6;3;HS;176;
+Kriegsdelfin;Kriegsformen;15;13;12;15;11;12;11;11;23;6;3;HS;177;
+Schlachtross;Kriegsformen;15;12;12;15;11;9;10;11;22;5;3;HS;177;
+Ahi;Technocritter;9;11;9;10;10;7;10;8;19;6;0;HS;145;
+Bastet (Hauskatze);Technocritter;9;11;10;8;10;9;11;10;22;6;0;HS;145;
+Bastet (Großkatze);Technocritter;13;12;11;12;10;9;11;10;23;6;0;HS;145;
+Digit (Küchenschabe);Technocritter;8;9;12;7;9;7;9;7;21;5;0;HS;146;
+Digit (Spinne);Technocritter;8;9;9;7;8;7;9;9;18;6;0;HS;146;
+Flipper;Technocritter;15;12;12;14;11;10;12;11;24;6;0;HS;147;
+Furfur;Technocritter;12;11;12;11;10;8;10;10;22;5;0;HS;147;
+Wüstling;Technocritter;8;11;10;8;10;8;11;9;21;5;0;HS;148;
+Straßenköter (Hund);Technocritter;11;10;11;11;10;9;11;10;22;6;0;HS;148;
+Straßenköter (Wolf);Technocritter;13;10;12;12;10;9;11;10;23;6;0;HS;148;
+Nezumi;Technocritter;8;10;9;7;9;8;9;8;18;6;0;HS;148;
+Gauner (Krähe);Technocritter;9;10;9;8;9;8;10;7;19;5;0;HS;148;
+Gauner (Adler);Technocritter;10;12;11;9;9;8;10;7;21;7;0;HS;148;
+Testudine;Technocritter;8;6;5;6;7;6;6;6;11;6;0;KC;167;
+Yogi;Technocritter;16;11;12;15;11;8;9;10;21;6;3;KC;165;
+Elephantidae;Technocritter;19;11;11;23;9;9;10;10;21;6;3;KC;166;
+Crocodylia;Technocritter;15;12;11;16;8;8;9;9;20;6;3;KC;166;
+Gef;Technocritter;7;13;14;9;10;8;13;10;27;6;0;KC;169;
+Ipodo (Ferret);Technocritter;7;9;9;8;12;8;12;10;25;6;0;KC;170;
+Ipodo (Otter);Technocritter;8;10;10;9;12;8;12;10;25;6;0;KC;170;
+Ipodo (Badger);Technocritter;8;10;10;9;12;8;12;10;25;6;0;KC;170;
+Ipodo (Wolverine);Technocritter;9;11;11;10;12;8;12;10;25;6;0;KC;170;
+Energizer;Technocritter;7;12;11;8;10;8;13;10;25;6;0;KC;172;
+G33ko;Technocritter;7;11;11;8;10;8;13;9;25;6;0;KC;172;
+Rybbyt;Technocritter;8;10;9;8;10;8;9;9;18;6;0;KC;173;
+Migaloo;Technocritter;28;11;11;38;12;9;11;10;22;6;0;KC;177;
+Verwüster;Technocritter;13;11;12;12;11;8;11;8;23;6;0;KC;176;
+E-Fisch;Technocritter;9;9;10;9;9;8;9;8;19;6;0;KC;175;
+Datenkamel;Technocritter;17;10;10;15;10;8;10;12;19;6;0;KC;175;
+Primate;Technocritter;13;13;13;13;7;6;9;7;8;3;0;KC;169;
+Techwurm;Technocritter;7;7;7;7;9;8;7;7;14;6;0;KC;174;
+Dämon;Protosapiens;0;0;0;0;11;9;13;10;26;6;0;HS;153;
+Frobnitz;Protosapiens;0;0;0;0;10;9;11;11;22;8;0;HS;153;
+Grue;Protosapiens;0;0;0;0;12;9;13;9;26;8;0;HS;154;
+SINtax;Protosapiens;0;0;0;0;9;8;9;10;18;5;0;HS;155;
+Tentakel;Protosapiens;0;0;0;0;11;8;10;9;20;5;0;HS;155;
+Cyberwerwolf;Protosapiens;0;0;0;0;12;9;12;10;24;7;0;HS;153;
+Schwergewicht;Protosapiens;0;0;0;0;13;8;10;9;20;7;0;HS;154;
+Yantra;Protosapiens;0;0;0;0;12;10;11;11;22;7;0;HS;156;
+Kurier-Sprite;Sprites;0;0;0;0;F+2;F+1;F+3;F;(F*2)+1;0;0;SR5;258;
+Infiltrator-Sprite;Sprites;0;0;0;0;F+1;F+2;F+3;F;(F*2)+2;0;0;SR5;258;
+Daten-Sprite;Sprites;0;0;0;0;F+1;F+4;F;F-1;(F*2)+4;0;0;SR5;258;
+Stör-Sprite;Sprites;0;0;0;0;F+2;F+1;F;F+3;(F*2)+1;0;0;SR5;258;
+Maschinen-Sprite;Sprites;0;0;0;0;F+2;F+3;F;F+1;(F*2)+3;0;0;SR5;258;
+Begleiter-Sprite;Sprites;0;0;0;0;F+4;F;F+1;F-1;(F*2);0;0;KC;100;
+Generalisten-Sprite;Sprites;0;0;0;0;F+1;F+1;F+1;F+1;(F*2);0;0;KC;100;
+Gabrielshund;Paranormale Critter;3;5;6;7;4;2;3;2;15;2;8;SW;14;
+Kalkwyvern;Paranormale Critter;11;9;8;12;8;7;9;7;17;7;10;SHB3;170;
+Grubendachs;Paranormale Critter;8;9;9;7;7;6;7;6;16;7;7;SHB3;207;
+SOX-Termite;Paranormale Critter;5;5;6;5;7;5;6;4;12;5;6;SHB3;208;
+Steinbeißer;Paranormale Critter;11;7;8;12;7;6;7;7;15;7;7;SHB3;209;
+Panzerassel;Mutierte Critter;22;7;6;20;10;5;5;5;11;4;0;SHB3;207;
+Chickcharney;Paranormale Critter;5;5;6;6;5;5;3;5;7;1;5;HT;132;
+Chupacabra;Paranormale Critter;8;8;6;6;6;3;5;2;8;2;5;HT;132;
+Magui;Paranormale Critter;6;6;3;12;2;4;6;3;9;2;6;HT;133;
+Nachtmanta;Paranormale Critter;9;9;6;9;2;6;3;5;7;3;5;HT;134;
+Gun Bunny;Paranormale Critter;5;7;6;6;2;1;7;5;12;9;4;BTB;100;
+African Zipper;Paranormale Critter;2;9;7;3;3;1;7;5;14;9;4;BTB;100;
+Sir Monty's Hare;Paranormale Critter;4;8;7;4;2;1;7;8;14;9;4;BTB;100;
+Rhodesian Razorback;Paranormale Critter;8;5;6;6;4;2;7;6;13;2;4;BTB;100;
+Mine Spider;Paranormale Critter;6;6;4;8;2;1;5;5;11;2;4;BTB;101;

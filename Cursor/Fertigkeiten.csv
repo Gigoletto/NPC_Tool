@@ -1,0 +1,77 @@
+Name;attribute;Kategorie;default;skillgroup;Quelle;Seite
+Luftfahrtmechanik;LOG;Technische Aktionsfertigkeiten;False;Engineering;SR5;143
+Alchemie;MAG;Magische Aktionsfertigkeiten;False;Enchanting;SR5;142
+Tierführung;CHA;Technische Aktionsfertigkeiten;True;;SR5;143
+Arkana;LOG;Pseudo-Magische Aktionsfertigkeiten;False;;SR5;142
+Projektilwaffen;AGI;Kampf-Aktionsfertigkeiten;True;;SR5;130
+Waffenbau;LOG;Technische Aktionsfertigkeiten;True;;SR5;143
+Fokusherstellung;MAG;Magische Aktionsfertigkeiten;False;Enchanting;SR5;142
+Handwerk;INT;Technische Aktionsfertigkeiten;False;;SR5;143
+Askennen;INT;Magische Aktionsfertigkeiten;False;;SR5;142
+Astralkampf;WIL;Magische Aktionsfertigkeiten;False;;SR5;142
+Schnellfeuerwaffen;AGI;Kampf-Aktionsfertigkeiten;True;Firearms;SR5;130
+Fahrzeugmechanik;LOG;Technische Aktionsfertigkeiten;False;Engineering;SR5;143
+Verbannen;MAG;Magische Aktionsfertigkeiten;False;Conjuring;SR5;142
+Bindung;MAG;Magische Aktionsfertigkeiten;False;Conjuring;SR5;142
+Biotechnologie;LOG;Technische Aktionsfertigkeiten;False;Biotech;SR5;144
+Klingenwaffen;AGI;Kampf-Aktionsfertigkeiten;True;Close Combat;SR5;130
+Chemie;LOG;Technische Aktionsfertigkeiten;False;;SR5;144
+Knüppel;AGI;Kampf-Aktionsfertigkeiten;True;Close Combat;SR5;131
+Kompilieren;RES;Resonanz-Aktionsfertigkeiten;False;Tasking;SR5;143
+Computer;LOG;Technische Aktionsfertigkeiten;True;Electronics;SR5;144
+Überreden;CHA;Soziale Aktionsfertigkeiten;True;Acting;SR5;138
+Antimagie;MAG;Magische Aktionsfertigkeiten;False;Sorcery;SR5;142
+Matrixkampf;LOG;Technische Aktionsfertigkeiten;True;Cracking;SR5;144
+Cybertechnologie;LOG;Technische Aktionsfertigkeiten;False;Biotech;SR5;144
+Dekompilieren;RES;Resonanz-Aktionsfertigkeiten;False;Tasking;SR5;143
+Sprengstoffe;LOG;Technische Aktionsfertigkeiten;True;;SR5;144
+Entzaubern;MAG;Magische Aktionsfertigkeiten;False;Enchanting;SR5;142
+Verkleiden;INT;Körperliche Aktionsfertigkeiten;True;Stealth;SR5;133
+Tauchen;BOD;Körperliche Aktionsfertigkeiten;True;;SR5;133
+Elektronische Kriegsführung;LOG;Technische Aktionsfertigkeiten;False;Cracking;SR5;144
+Entfesseln;AGI;Körperliche Aktionsfertigkeiten;True;;SR5;133
+Gebräuche;CHA;Soziale Aktionsfertigkeiten;True;Influence;SR5;138
+Exotische Nahkampfwaffe;AGI;Kampf-Aktionsfertigkeiten;False;;SR5;131
+Exotische Fernkampfwaffe;AGI;Kampf-Aktionsfertigkeiten;False;;SR5;131
+Exotisches Fahrzeug;REA;Fahrzeug-Aktionsfertigkeiten;False;;SR5;131
+Erste Hilfe;LOG;Technische Aktionsfertigkeiten;True;Biotech;SR5;144
+Fliegen;AGI;Körperliche Aktionsfertigkeiten;False;Athletics;SR5;394
+Fälschen;LOG;Technische Aktionsfertigkeiten;True;;SR5;144
+Freifall;BOD;Körperliche Aktionsfertigkeiten;True;;SR5;133
+Geschütze;AGI;Fahrzeug-Aktionsfertigkeiten;True;;SR5;146
+Akrobatik;AGI;Körperliche Aktionsfertigkeiten;True;Athletics;SR5;133
+Hacking;LOG;Technische Aktionsfertigkeiten;True;Cracking;SR5;145
+Hardware;LOG;Technische Aktionsfertigkeiten;False;Electronics;SR5;145
+Schwere Waffen;AGI;Kampf-Aktionsfertigkeiten;True;;SR5;132
+Verkörperung;CHA;Soziale Aktionsfertigkeiten;True;Acting;SR5;138
+Industriemechanik;LOG;Technische Aktionsfertigkeiten;False;Engineering;SR5;145
+Unterricht;CHA;Soziale Aktionsfertigkeiten;True;;SR5;138
+Einschüchtern;CHA;Soziale Aktionsfertigkeiten;True;;SR5;139
+Führung;CHA;Soziale Aktionsfertigkeiten;True;Influence;SR5;139
+Schlosser;AGI;Technische Aktionsfertigkeiten;False;;SR5;145
+Gewehre;AGI;Kampf-Aktionsfertigkeiten;True;Firearms;SR5;132
+Medizin;LOG;Technische Aktionsfertigkeiten;False;Biotech;SR5;145
+Seefahrtmechanik;LOG;Technische Aktionsfertigkeiten;False;Engineering;SR5;145
+Navigation;INT;Technische Aktionsfertigkeiten;True;Outdoors;SR5;145
+Verhandlung;CHA;Soziale Aktionsfertigkeiten;True;Influence;SR5;139
+Fingerfertigkeit;AGI;Körperliche Aktionsfertigkeiten;False;Stealth;SR5;133
+Wahrnehmung;INT;Körperliche Aktionsfertigkeiten;True;;SR5;133
+Vorführung;CHA;Soziale Aktionsfertigkeiten;True;Acting;SR5;139
+Raumfahrzeuge;REA;Fahrzeug-Aktionsfertigkeiten;False;;SR5;146
+Flugzeuge;REA;Fahrzeug-Aktionsfertigkeiten;False;;SR5;147
+Bodenfahrzeuge;REA;Fahrzeug-Aktionsfertigkeiten;True;;SR5;147
+Läufer;REA;Fahrzeug-Aktionsfertigkeiten;False;;SR5;147
+Schiffe;REA;Fahrzeug-Aktionsfertigkeiten;True;;SR5;147
+Pistolen;AGI;Kampf-Aktionsfertigkeiten;True;Firearms;SR5;132
+Registrieren;RES;Resonanz-Aktionsfertigkeiten;False;Tasking;SR5;143
+Ritualzauberei;MAG;Magische Aktionsfertigkeiten;False;Sorcery;SR5;142
+Laufen;STR;Körperliche Aktionsfertigkeiten;True;Athletics;SR5;133
+Schleichen;AGI;Körperliche Aktionsfertigkeiten;True;Stealth;SR5;133
+Software;LOG;Technische Aktionsfertigkeiten;False;Electronics;SR5;145
+Spruchzauberei;MAG;Magische Aktionsfertigkeiten;False;Sorcery;SR5;143
+Herbeirufen;MAG;Magische Aktionsfertigkeiten;False;Conjuring;SR5;143
+Survival;WIL;Körperliche Aktionsfertigkeiten;True;Outdoors;SR5;133
+Schwimmen;STR;Körperliche Aktionsfertigkeiten;True;Athletics;SR5;134
+Wurfwaffen;AGI;Kampf-Aktionsfertigkeiten;True;;SR5;132
+Spurenlesen;INT;Körperliche Aktionsfertigkeiten;True;Outdoors;SR5;134
+Waffenloser Kampf;AGI;Kampf-Aktionsfertigkeiten;True;Close Combat;SR5;132
