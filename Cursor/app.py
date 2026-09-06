@@ -404,8 +404,7 @@ def inject_layout_css() -> None:
         )
     rules.append(
         ".stCaption img,.stMarkdown img,[data-testid='stExpander'] img,"
-        "[data-testid='stPopover'] img,[data-testid='stRadio'] img,"
-        "[data-testid='stPopoverButton'] img{"
+        "[data-testid='stRadio'] img{"
         "height:1.15em!important;"
         "width:1.15em!important;"
         "max-height:1.15em!important;"
@@ -523,12 +522,56 @@ def _theme_override_css() -> str:
         "[data-testid='stProgressBar']>div{"
         f"background-color:{primary}!important;"
         "}"
+        "[data-testid='stCheckbox'] input,"
+        "[data-testid='stRadio'] input,"
+        ".stCheckbox input,"
+        ".stRadio input{"
+        f"accent-color:{primary}!important;"
+        "}"
         "[data-testid='stCheckbox'] [aria-checked='true'],"
         "[data-testid='stRadio'] [aria-checked='true'],"
+        "[data-testid='stRadioGroup'] [aria-checked='true'],"
         "[data-baseweb='checkbox'][aria-checked='true'],"
         "[data-baseweb='radio'] [aria-checked='true']{"
+        f"accent-color:{primary}!important;"
+        f"border-color:{primary}!important;"
+        "}"
+        "[data-testid='stCheckbox'] [aria-checked='true']>div>div:first-child,"
+        "[data-testid='stCheckbox'] [aria-checked='true']>span:first-child,"
+        "[role='checkbox'][aria-checked='true']>div>div:first-child,"
+        "[data-testid='stRadio'] [aria-checked='true']>div:first-child,"
+        "[data-testid='stRadio'] [aria-checked='true']>span:first-child,"
+        "[data-testid='stRadioGroup'] [aria-checked='true']>div:first-child,"
+        "[role='radio'][aria-checked='true']>div:first-child,"
+        "[data-baseweb='checkbox'][aria-checked='true']>div:first-child,"
+        "[data-baseweb='radio'] [aria-checked='true']>div:first-child{"
+        f"background:{primary}!important;"
         f"background-color:{primary}!important;"
         f"border-color:{primary}!important;"
+        f"box-shadow:none!important;"
+        "}"
+        "div[class*='st-key-rename-btn'] [data-testid='stPopoverButton'],"
+        "div[class*='st-key-rename-btn'] button{"
+        "background:transparent!important;"
+        "background-color:transparent!important;"
+        "background-image:none!important;"
+        "border:none!important;"
+        "box-shadow:none!important;"
+        "outline:none!important;"
+        "min-height:2rem!important;"
+        "padding:0.15rem!important;"
+        "}"
+        "div[class*='st-key-rename-btn'] [data-testid='stPopoverButton'] img,"
+        "div[class*='st-key-rename-btn'] button img{"
+        "height:22px!important;"
+        "width:22px!important;"
+        "max-height:22px!important;"
+        "max-width:22px!important;"
+        "object-fit:contain!important;"
+        "}"
+        "div[class*='st-key-rename-btn'] [data-testid='stPopoverButton'] svg,"
+        "div[class*='st-key-rename-btn'] button svg{"
+        "display:none!important;"
         "}"
         "[data-baseweb='slider'] [role='progressbar'],"
         "div[data-baseweb='slider']>div>div{"
@@ -551,6 +594,11 @@ def _inject_theme_into_parent() -> None:
         "var tag=doc.getElementById(id);"
         "if(!tag){tag=doc.createElement('style');tag.id=id;doc.head.appendChild(tag);}"
         "tag.textContent=css;"
+        "function isRed(c){"
+        "var m=String(c||'').match(/rgba?\\(\\s*(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)/i);"
+        "if(m){var r=+m[1],g=+m[2],b=+m[3];return r>=230&&g<=90&&b<=90;}"
+        "return /#ff4b4b|#f63366|#ff2b2b/i.test(c||'');"
+        "}"
         "function paint(){"
         "doc.querySelectorAll('style').forEach(function(el){"
         "if(el.id===id)return;"
@@ -567,12 +615,28 @@ def _inject_theme_into_parent() -> None:
         ".replace(/rgb\\(\\s*255\\s*,\\s*75\\s*,\\s*75\\s*\\)/gi,'rgb(0, 229, 255)')"
         ".replace(/rgba\\(\\s*255\\s*,\\s*75\\s*,\\s*75\\s*,/gi,'rgba(0, 229, 255,'));"
         "});"
+        "doc.querySelectorAll('[data-testid=stCheckbox],[data-testid=stRadio],.stCheckbox,.stRadio').forEach(function(root){"
+        "root.querySelectorAll('div,span').forEach(function(el){"
+        "if(el.closest('[data-testid=stWidgetLabel],[data-testid=stMarkdown],[data-testid=stCaption]'))return;"
+        "var cs=window.parent.getComputedStyle(el);"
+        "if(isRed(cs.backgroundColor))el.style.setProperty('background-color','#00E5FF','important');"
+        "if(isRed(cs.borderColor)||isRed(cs.borderTopColor))"
+        "el.style.setProperty('border-color','#00E5FF','important');"
+        "});"
+        "});"
+        "}"
+        "var scheduled=false;"
+        "function requestPaint(){"
+        "if(scheduled)return;"
+        "scheduled=true;"
+        "requestAnimationFrame(function(){scheduled=false;paint();});"
         "}"
         "paint();"
-        "if(!window.parent.__sr5ThemeWatch){"
-        "window.parent.__sr5ThemeWatch=true;"
-        "new MutationObserver(paint).observe(doc.documentElement,"
-        "{subtree:true,childList:true});"
+        "if(!window.parent.__sr5ThemeWatch2){"
+        "window.parent.__sr5ThemeWatch2=true;"
+        "new MutationObserver(requestPaint).observe(doc.documentElement,"
+        "{subtree:true,childList:true,attributes:true,"
+        "attributeFilter:['style','class','aria-checked']});"
         "}"
         "})();</script>"
     )
@@ -1828,17 +1892,19 @@ def render_damage_monitor(npc: engine.BaseNPC, config: dict) -> int:
 def render_rename_control(config: dict, current_name: str) -> None:
     """Anzeigename auf der Dashboard-Karte aendern - nur label, nicht die CSV-Referenz."""
     uid = config["uid"]
-    with st.popover(with_icon("Stift") or "Namen bearbeiten", help="Namen bearbeiten"):
-        with st.form(key=f"rename_{uid}", clear_on_submit=False):
-            new_name = st.text_input("Anzeigename", value=current_name, max_chars=80)
-            submitted = st.form_submit_button("Speichern")
-        if submitted:
-            cleaned = new_name.strip()
-            if not cleaned:
-                st.warning("Der Name darf nicht leer sein.")
-            elif cleaned != current_name:
-                config["label"] = cleaned
-                st.rerun()
+    label = icon_markdown("Stift") or "\u270f\ufe0f"
+    with st.container(key=f"rename-btn-{uid}"):
+        with st.popover(label, help="Namen bearbeiten", type="tertiary"):
+            with st.form(key=f"rename_{uid}", clear_on_submit=False):
+                new_name = st.text_input("Anzeigename", value=current_name, max_chars=80)
+                submitted = st.form_submit_button("Speichern")
+            if submitted:
+                cleaned = new_name.strip()
+                if not cleaned:
+                    st.warning("Der Name darf nicht leer sein.")
+                elif cleaned != current_name:
+                    config["label"] = cleaned
+                    st.rerun()
 
 
 def render_card(
