@@ -83,6 +83,10 @@ ATTRIBUTE_SHORT = {
     "Charisma": "CHA",
 }
 
+THEME_PRIMARY = "#00E5FF"
+THEME_PRIMARY_HOVER = "#00B8D4"
+THEME_ON_PRIMARY = "#0E1117"
+
 # 'Herbeirufen' ist der Name der Beschwoerungsfertigkeit in Fertigkeiten.csv.
 MAGIC_SKILL_LABELS = {"Herbeirufen": "Herbeirufen (Beschw\u00f6ren)"}
 
@@ -409,7 +413,60 @@ def inject_layout_css() -> None:
         "vertical-align:-0.15em!important;"
         "}"
     )
+    rules.append(_theme_override_css())
     st.html(f"<style>{''.join(rules)}</style>")
+
+
+def _theme_override_css() -> str:
+    """Cyan auch auf Streamlit Cloud, falls config.toml dort nicht greift."""
+    primary = THEME_PRIMARY
+    hover = THEME_PRIMARY_HOVER
+    ink = THEME_ON_PRIMARY
+    return (
+        f":root,.stApp,[data-testid='stAppViewContainer']{{"
+        f"--primary-color:{primary}!important;"
+        f"--st-primary-color:{primary}!important;"
+        "}}"
+        "[data-testid='stBaseButton-primary'],"
+        "[data-testid='stBaseButton-primaryFormSubmit'],"
+        "button[kind='primary'],"
+        ".stDownloadButton button[kind='primary']{"
+        f"background-color:{primary}!important;"
+        f"border-color:{primary}!important;"
+        f"color:{ink}!important;"
+        "}"
+        "[data-testid='stBaseButton-primary']:hover,"
+        "[data-testid='stBaseButton-primaryFormSubmit']:hover,"
+        "button[kind='primary']:hover,"
+        ".stDownloadButton button[kind='primary']:hover{"
+        f"background-color:{hover}!important;"
+        f"border-color:{hover}!important;"
+        f"color:{ink}!important;"
+        "}"
+        "[data-testid='stBaseButton-secondary']:hover,"
+        "[data-testid='stBaseButton-tertiary']:hover,"
+        "button[kind='secondary']:hover{"
+        f"border-color:{primary}!important;"
+        f"color:{primary}!important;"
+        "}"
+        "[data-testid='stSliderThumb'],"
+        "[data-testid='stSliderTickBarFilled']{"
+        f"background-color:{primary}!important;"
+        f"border-color:{primary}!important;"
+        "}"
+        "[data-testid='stProgress'] [role='progressbar']>div,"
+        "[data-testid='stProgressBar']>div{"
+        f"background-color:{primary}!important;"
+        "}"
+        "[data-testid='stCheckbox'] [aria-checked='true'],"
+        "[data-testid='stRadio'] [aria-checked='true']{"
+        f"background-color:{primary}!important;"
+        f"border-color:{primary}!important;"
+        "}"
+        "a,a:visited{"
+        f"color:{primary}!important;"
+        "}"
+    )
 
 
 def render_cards_per_row_control() -> int:
@@ -2149,7 +2206,7 @@ def render_initiative_tracker(
                     st.rerun()
 
 
-EXPLAIN_HEADING_COLOR = "#00E5FF"
+EXPLAIN_HEADING_COLOR = THEME_PRIMARY
 
 
 def _explain_heading(title: str) -> str:
