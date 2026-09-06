@@ -86,6 +86,58 @@ WEAPON_SKILL_RULES: tuple[tuple[str, str], ...] = (
 
 FALLBACK_WEAPON_SKILL = "Waffenloser Kampf"
 
+# Zauberer haben keine Astralkampf-Spalte; die Stufe kommt aus dieser Fertigkeit.
+ASTRAL_COMBAT_SKILL = "Astralkampf"
+ASTRAL_COMBAT_SKILL_SOURCE = "Schwere Waffen"
+
+MAGIC_ATTACK_SKILLS = ("Spruchzauberei", "Herbeirufen", ASTRAL_COMBAT_SKILL)
+
+CRITTER_SKILL_NOTE = (
+    "Hausregel: Critter ohne Fertigkeitswerte, Probe = Attribut x 2"
+)
+
+# Kuerzel der natuerlichen Limits auf den Karten.
+LIMIT_PHYSICAL = "K"
+LIMIT_MENTAL = "G"
+LIMIT_SOCIAL = "S"
+LIMIT_SPELL_FORCE = "KS"
+LIMIT_SPIRIT_FORCE = "KS"
+
+# Pools ohne Limit (kein Erfolgslimit nach SR5).
+NO_LIMIT_LABELS = {"Verteidigung", "Schadenswiderstand", "Entzug widerstehen"}
+
+# Fertigkeiten, deren Limit nicht aus der CSV-Kategorie folgt.
+SKILL_LIMIT_OVERRIDES: dict[str, str] = {
+    "Wahrnehmung": LIMIT_MENTAL,
+    "Spruchzauberei": LIMIT_SPELL_FORCE,
+    "Ritualzauberei": LIMIT_SPELL_FORCE,
+    "Herbeirufen": LIMIT_SPIRIT_FORCE,
+    "Astralkampf": LIMIT_MENTAL,
+}
+
+FALLBACK_SKILL_LIMITS: dict[str, str] = {
+    "Akrobatik": LIMIT_PHYSICAL,
+    "Antimagie": LIMIT_MENTAL,
+    "Gewehre": LIMIT_PHYSICAL,
+    "Klingenwaffen": LIMIT_PHYSICAL,
+    "Kn\u00fcppel": LIMIT_PHYSICAL,
+    "Pistolen": LIMIT_PHYSICAL,
+    "Projektilwaffen": LIMIT_PHYSICAL,
+    "Schleichen": LIMIT_PHYSICAL,
+    "Schnellfeuerwaffen": LIMIT_PHYSICAL,
+    "Schwere Waffen": LIMIT_PHYSICAL,
+    "Schwimmen": LIMIT_PHYSICAL,
+    "Spruchzauberei": LIMIT_SPELL_FORCE,
+    "Herbeirufen": LIMIT_SPIRIT_FORCE,
+    "Waffenloser Kampf": LIMIT_PHYSICAL,
+    "Wahrnehmung": LIMIT_MENTAL,
+    "Wurfwaffen": LIMIT_PHYSICAL,
+    "Exotische Nahkampfwaffe": LIMIT_PHYSICAL,
+    "Exotische Fernkampfwaffe": LIMIT_PHYSICAL,
+    ASTRAL_COMBAT_SKILL: LIMIT_MENTAL,
+    "Selbstbeherrschung": LIMIT_SOCIAL,
+}
+
 
 @dataclass(frozen=True)
 class DicePool:
@@ -97,6 +149,8 @@ class DicePool:
     wounds: int = 0
     note: str = ""
     limit: str | None = None
+    ignore_wounds: bool = False
+    ignore_situation: bool = False
 
     @property
     def base(self) -> int:
@@ -119,38 +173,139 @@ class DicePool:
     def text(self) -> str:
         """Zeile fuer die Anzeige, z. B. '9 W6 (Intuition 4 + Wahrnehmung 5)'."""
         line = f"{self.total} W6 ({self.formula})"
+        if self.limit is not None:
+            line += f" [{self.limit}]"
         if self.note:
             line += f" - {self.note}"
         return line
 
     @property
     def dashboard_text(self) -> str:
-        """Kompakte Dashboard-Zeile: Wuerfel, optional Limit und aktive Abzuege."""
+        """Kompakte Kartenzeile: nur der finale Pool, optional das Limit."""
         line = f"{self.total} W6"
         if self.limit is not None:
             line += f" [{self.limit}]"
-        if self.wounds:
-            line += f" ({self.wounds} Wunden)"
-        if self.modifier:
-            line += f" ({self.modifier:+d} Situation)"
-        if self.note:
-            line += f" - {self.note}"
         return line
 
     def with_modifier(self, modifier: int) -> "DicePool":
+        if self.ignore_situation:
+            return self
         return DicePool(
-            self.label, self.components, modifier, self.wounds, self.note, self.limit
+            self.label,
+            self.components,
+            modifier,
+            self.wounds,
+            self.note,
+            self.limit,
+            self.ignore_wounds,
+            self.ignore_situation,
         )
 
     def with_wounds(self, wounds: int) -> "DicePool":
+        if self.ignore_wounds:
+            return self
         return DicePool(
-            self.label, self.components, self.modifier, wounds, self.note, self.limit
+            self.label,
+            self.components,
+            self.modifier,
+            wounds,
+            self.note,
+            self.limit,
+            self.ignore_wounds,
+            self.ignore_situation,
+        )
+
+    def with_limit(self, limit: str | None) -> "DicePool":
+        return DicePool(
+            self.label,
+            self.components,
+            self.modifier,
+            self.wounds,
+            self.note,
+            limit,
+            self.ignore_wounds,
+            self.ignore_situation,
         )
 
 
 def wound_modifier(damage: int) -> int:
     """Wundabzug: -1 Wuerfel je drei erlittenen Schadensboxen (3-5 = -1, 6-8 = -2)."""
     return -(max(0, int(damage)) // BOXES_PER_WOUND)
+
+
+def limit_kind_from_category(category: object) -> str:
+    """Ordnet eine Fertigkeitskategorie dem natuerlichen Limit zu."""
+    text = (
+        str(category)
+        .lower()
+        .replace("\u00e4", "ae")
+        .replace("\u00f6", "oe")
+        .replace("\u00fc", "ue")
+    )
+    if "sozial" in text:
+        return LIMIT_SOCIAL
+    if "kampf" in text or "koerperlich" in text or "fahrzeug" in text:
+        return LIMIT_PHYSICAL
+    return LIMIT_MENTAL
+
+
+def build_skill_limit_map(skill_db: pd.DataFrame | None = None) -> dict[str, str]:
+    """Limit-Art je Fertigkeit, inkl. Ausnahmen wie Wahrnehmung = geistig."""
+    mapping = dict(FALLBACK_SKILL_LIMITS)
+    if skill_db is None or "Kategorie" not in skill_db.columns:
+        mapping.update(SKILL_LIMIT_OVERRIDES)
+        return mapping
+
+    for name, category in skill_db["Kategorie"].items():
+        skill = str(name)
+        mapping[skill] = SKILL_LIMIT_OVERRIDES.get(
+            skill, limit_kind_from_category(category)
+        )
+    mapping.update(SKILL_LIMIT_OVERRIDES)
+    return mapping
+
+
+def inherent_limit_text(
+    npc: engine.BaseNPC,
+    kind: str,
+    magic_force: int | None = None,
+) -> str | None:
+    """Text in eckigen Klammern: Zahl, bei Zauber und Herbeirufen nur KS."""
+    del magic_force
+    if kind == LIMIT_PHYSICAL:
+        return str(npc.physical_limit())
+    if kind == LIMIT_MENTAL:
+        return str(npc.mental_limit())
+    if kind == LIMIT_SOCIAL:
+        return str(npc.social_limit())
+    if kind == LIMIT_SPELL_FORCE:
+        return LIMIT_SPELL_FORCE
+    if kind == LIMIT_SPIRIT_FORCE:
+        return LIMIT_SPIRIT_FORCE
+    return None
+
+
+def assign_pool_limit(
+    pool: DicePool,
+    npc: engine.BaseNPC,
+    skill_limits: dict[str, str] | None = None,
+    magic_force: int | None = None,
+) -> DicePool:
+    """Setzt das Limit, sofern die Probe eines hat und noch keins steht."""
+    if pool.limit is not None or pool.label in NO_LIMIT_LABELS:
+        return pool
+
+    skill_limits = skill_limits or FALLBACK_SKILL_LIMITS
+    kind = skill_limits.get(pool.label)
+    if pool.label == "Angriff (waffenlos)":
+        kind = LIMIT_PHYSICAL
+    elif pool.label == "Selbstbeherrschung":
+        kind = LIMIT_SOCIAL
+    if kind is None:
+        return pool
+
+    text = inherent_limit_text(npc, kind, magic_force)
+    return pool.with_limit(text) if text else pool
 
 
 def build_skill_attribute_map(skill_db: pd.DataFrame | None = None) -> dict[str, str]:
@@ -220,7 +375,14 @@ def attack_pool(
     else:
         pool = skill_pool(npc, skill, skill_map, modifier)
     limit = weapon.accuracy if weapon.accuracy != "-" else None
-    return DicePool(f"Angriff mit {weapon.name}", pool.components, modifier, limit=limit)
+    note = f"Schaden {weapon.damage} \u00b7 DK {weapon.ap}"
+    return DicePool(
+        f"Angriff mit {weapon.name}",
+        pool.components,
+        modifier,
+        note=note,
+        limit=limit,
+    )
 
 
 def defense_pool(npc: engine.BaseNPC, modifier: int = 0) -> DicePool:
@@ -245,6 +407,7 @@ def damage_resistance_pool(npc: engine.BaseNPC, modifier: int = 0) -> DicePool:
             ("Panzerung", armor),
         ),
         modifier,
+        ignore_wounds=True,
     )
 
 
@@ -261,14 +424,19 @@ def composure_pool(npc: engine.BaseNPC, modifier: int = 0) -> DicePool:
 
 
 def drain_pool(npc: engine.BaseNPC, modifier: int = 0) -> DicePool:
-    """Entzug widerstehen: Willenskraft + Logik (Magier)."""
+    """Entzug widerstehen: WIL+LOG (Hermetiker) oder WIL+CHA (Schamane)."""
+    del modifier  # Deckung/Sicht gehoert nicht auf den Entzug.
+    second = "Logik"
+    if isinstance(npc, engine.MagicianNPC):
+        second = npc.drain_attribute
     return DicePool(
         "Entzug widerstehen",
         (
             ("Willenskraft", npc.attributes["Willenskraft"]),
-            ("Logik", npc.attributes["Logik"]),
+            (second, npc.attributes[second]),
         ),
-        modifier,
+        note="Situation wirkt nicht auf Entzug",
+        ignore_situation=True,
     )
 
 
@@ -279,6 +447,44 @@ def spirit_skill_pool(
     return DicePool(
         label,
         ((attribute, attribute_value(npc, attribute)), ("Kraftstufe", npc.force)),
+        modifier,
+    )
+
+
+def spirit_unarmed_attack_pool(npc: engine.Spirit, modifier: int = 0) -> DicePool:
+    """GES + Waffenloser Kampf (Kraftstufe), Schaden geistig."""
+    return DicePool(
+        "Angriff (waffenlos)",
+        (
+            ("Geschick", attribute_value(npc, "Geschick")),
+            ("Waffenloser Kampf", npc.force),
+        ),
+        modifier,
+        note=f"Schaden {npc.unarmed_damage}G",
+    )
+
+
+def magician_astral_pool(npc: engine.MagicianNPC, modifier: int = 0) -> DicePool:
+    """WIL + Astralkampf; die Stufe stammt mangels Spalte aus Schwere Waffen."""
+    rating = engine.to_int(getattr(npc, "skills", {}).get(ASTRAL_COMBAT_SKILL_SOURCE))
+    return DicePool(
+        ASTRAL_COMBAT_SKILL,
+        (
+            ("Willenskraft", npc.attributes["Willenskraft"]),
+            (ASTRAL_COMBAT_SKILL, rating),
+        ),
+        modifier,
+    )
+
+
+def critter_attribute_pool(
+    npc: engine.Critter, label: str, attribute: str, modifier: int = 0
+) -> DicePool:
+    """Hausregel: Critter-Probe als Attribut + Attribut (Attribut x 2)."""
+    value = attribute_value(npc, attribute)
+    return DicePool(
+        label,
+        ((attribute, value), (label, value)),
         modifier,
     )
 
@@ -308,25 +514,39 @@ def _magician_pools(
     magic_pools = [
         skill_pool(npc, skill, skill_map, modifier) for skill in engine.MAGIC_SKILLS
     ]
+    magic_pools.append(magician_astral_pool(npc, modifier))
     magic_labels = {pool.label for pool in magic_pools}
     rest = [pool for pool in pools[2:] if pool.label not in magic_labels]
     return pools[:2] + [drain_pool(npc, modifier)] + magic_pools + rest
 
 
+def spirit_damage_resistance_pool(
+    npc: engine.Spirit, modifier: int = 0
+) -> DicePool:
+    """Schadenswiderstand: Immunitaet 2xF, hoehere getragene Panzerung gewinnt."""
+    immunity = engine.spirit_hardened_armor(npc.force)
+    armor = engine.to_int(getattr(npc, "armor", 0))
+    if armor > immunity:
+        note = f"getragene Panzerung {armor} (Immunitaet 2 x F = {immunity})"
+    else:
+        note = f"Immunitaet gegen normale Waffen (2 x F = {immunity})"
+        armor = max(armor, immunity)
+    return DicePool(
+        "Schadenswiderstand",
+        (
+            ("Konstitution", npc.attributes["Konstitution"]),
+            ("Panzerung", armor),
+        ),
+        modifier,
+        note=note,
+        ignore_wounds=True,
+    )
+
+
 def _spirit_pools(npc: engine.Spirit, modifier: int) -> list[DicePool]:
-    armor = 2 * npc.force
     return [
         defense_pool(npc, modifier),
-        DicePool(
-            "Schadenswiderstand",
-            (
-                ("Konstitution", npc.attributes["Konstitution"]),
-                ("Panzerung", armor),
-            ),
-            modifier,
-            note=f"Immunitaet gegen normale Waffen (2 x F = {armor})",
-        ),
-        spirit_skill_pool(npc, "Waffenloser Kampf", "Geschick", modifier),
+        spirit_damage_resistance_pool(npc, modifier),
         spirit_skill_pool(npc, "Wahrnehmung", "Intuition", modifier),
         spirit_skill_pool(npc, "Astralkampf", "Willenskraft", modifier),
         spirit_skill_pool(npc, "Schleichen", "Geschick", modifier),
@@ -335,23 +555,14 @@ def _spirit_pools(npc: engine.Spirit, modifier: int) -> list[DicePool]:
 
 
 def _critter_pools(npc: engine.Critter, modifier: int) -> list[DicePool]:
-    # Die Critter-Datenbank enthaelt keine Fertigkeiten, daher Proben ungeuebt.
+    # Keine Fertigkeitswerte in der CSV: Hausregel Attribut x 2.
     pools = [defense_pool(npc, modifier), damage_resistance_pool(npc, modifier)]
     for label, attribute in (
         ("Wahrnehmung", "Intuition"),
         ("Waffenloser Kampf", "Geschick"),
         ("Schleichen", "Geschick"),
     ):
-        pools.append(
-            DicePool(
-                label,
-                (
-                    (attribute, attribute_value(npc, attribute)),
-                    (UNGEUEBT, DEFAULTING_PENALTY),
-                ),
-                modifier,
-            )
-        )
+        pools.append(critter_attribute_pool(npc, label, attribute, modifier))
     pools.append(composure_pool(npc, modifier))
     return pools
 
@@ -361,6 +572,8 @@ def standard_pools(
     skill_map: dict[str, str] | None = None,
     modifier: int = 0,
     wounds: int = 0,
+    magic_force: int | None = None,
+    skill_limits: dict[str, str] | None = None,
 ) -> list[DicePool]:
     """Die wichtigsten Pools des jeweiligen Archetyps, bereits fertig gerechnet."""
     if isinstance(npc, engine.Spirit):
@@ -374,30 +587,59 @@ def standard_pools(
     else:
         pools = [defense_pool(npc, modifier)]
 
-    # Angriffe mit ausgeruesteten Waffen stehen ganz oben.
+    # Waffenangriffe und angeborene Angriffe stehen ganz oben.
     attacks = [
         attack_pool(npc, weapon, skill_map, modifier) for weapon in npc.weapons
     ]
-    pools = attacks + pools
+    if isinstance(npc, engine.Spirit):
+        attacks.append(spirit_unarmed_attack_pool(npc, modifier))
+    pools = [
+        assign_pool_limit(pool, npc, skill_limits, magic_force)
+        for pool in attacks + pools
+    ]
 
     if wounds:
         pools = [pool.with_wounds(wounds) for pool in pools]
     return pools
 
 
+def initiative_total(npc: engine.BaseNPC, modifier: int = 0, wounds: int = 0) -> int:
+    """Finale Initiative-Basis inklusive Situation und Wundabzug."""
+    return max(0, npc.initiative_base + modifier + wounds)
+
+
 def initiative_line(npc: engine.BaseNPC, modifier: int = 0, wounds: int = 0) -> str:
     """Initiative als reiner Text - die Wuerfel wirft der Spielleiter selbst."""
-    base = max(0, npc.initiative_base + modifier + wounds)
-    line = f"{base} + {npc.initiative_dice}W6"
+    return f"{initiative_total(npc, modifier, wounds)} + {npc.initiative_dice}W6"
 
-    notes = []
+
+def initiative_explanation(
+    npc: engine.BaseNPC, modifier: int = 0, wounds: int = 0
+) -> list[str]:
+    """Rechenweg der Initiative inklusive aller Modifikatoren."""
+    lines: list[str] = []
+    if isinstance(npc, engine.Spirit):
+        lines.append(
+            f"(F x 2) + Aenderung Initiative = ({npc.force} x 2) + "
+            f"{npc.initiative_modifier} = {npc.natural_initiative_base()}"
+        )
+    else:
+        reaction = npc.attributes["Reaktion"]
+        intuition = npc.attributes["Intuition"]
+        natural = reaction + intuition
+        lines.append(f"Reaktion {reaction} + Intuition {intuition} = {natural}")
+        if npc.initiative_override is not None:
+            lines.append(f"Manuell gesetzt: {npc.initiative_override}")
+    lines.append(f"Initiativwuerfel: + {npc.initiative_dice}W6")
+    extras = []
     if wounds:
-        notes.append(f"{wounds:+d} Wundabzug")
+        extras.append(f"{wounds:+d} Wundabzug")
     if modifier:
-        notes.append(f"{modifier:+d} Situation")
-    if notes:
-        line += " (inkl. " + ", ".join(notes) + ")"
-    return line
+        extras.append(f"{modifier:+d} Situation")
+    if extras:
+        lines.append("Modifikatoren: " + ", ".join(extras))
+    lines.append(f"Ergebnis: {initiative_line(npc, modifier, wounds)}")
+    return lines
 
 
 def pool_table(pools: list[DicePool]) -> pd.DataFrame:

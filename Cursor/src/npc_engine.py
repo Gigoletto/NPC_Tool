@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import math
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 import pandas as pd
 
@@ -35,14 +35,21 @@ NPC_META_COLUMNS = ("Edge", "Essenz", "Magie", "Panzerung", INITIATIVWUERFEL)
 FORMULA_VARIABLES = ("KS", "F")
 
 # Spalten, in denen Critter Kraftstufen-Formeln enthalten koennen.
-CRITTER_FORCE_COLUMNS: tuple[str, ...] = ATTRIBUTES + ("Initiative", "Edge", "Magie")
+CRITTER_FORCE_COLUMNS: tuple[str, ...] = ATTRIBUTES + (
+    "Initiative",
+    "Edge",
+    "Magie",
+    RUESTUNG,
+)
+_HARDENED_ARMOR = re.compile(r"H$", re.IGNORECASE)
 
 _FORCE_REF_PATTERN = re.compile(r"(?<![A-Z])F(?![A-Z])|(?<![A-Z])KS(?![A-Z])", re.IGNORECASE)
 _FORMULA_SAFE_PATTERN = re.compile(r"^[\d+\-*/().]+$")
 
 MIN_SPIRIT_ATTRIBUTE = 1
 MIN_DRAIN = 2
-MAX_FORCE = 12
+MAX_FORCE = 25
+DEFAULT_ESSENCE = 6.0
 
 # Fertigkeiten, die jeder Zauberer besitzt - unabhaengig vom Wert in der CSV.
 # 'Herbeirufen' ist in Fertigkeiten.csv der Name der Beschwoerungsfertigkeit.
@@ -50,6 +57,14 @@ MAGIC_SKILLS = ("Spruchzauberei", "Antimagie", "Herbeirufen")
 
 DEFAULT_MAGIC = 6
 DEFAULT_MAGIC_SKILL = 4
+
+TRADITION_HERMETIC = "Hermetiker"
+TRADITION_SHAMAN = "Schamane"
+TRADITIONS = (TRADITION_HERMETIC, TRADITION_SHAMAN)
+DRAIN_ATTRIBUTE = {
+    TRADITION_HERMETIC: "Logik",
+    TRADITION_SHAMAN: "Charisma",
+}
 
 ARCHETYPE_MUNDANE = "Mundan"
 ARCHETYPE_MAGICIAN = "Zauberer"
@@ -163,14 +178,31 @@ def evaluate_formula(formula_str: object, force: int) -> int:
         return to_int(formula_str, default=0)
 
     try:
-        return int(eval(text, {"__builtins__": {}}, {}))
+        result = eval(text, {"__builtins__": {}}, {})
     except (SyntaxError, TypeError, ZeroDivisionError, NameError, ValueError):
         return to_int(formula_str, default=0)
+
+    try:
+        number = float(result)
+    except (TypeError, ValueError):
+        return to_int(formula_str, default=0)
+    # SR5: Brueche immer aufrunden (F/2 bei F=5 ergibt 3, nicht 2).
+    return int(math.ceil(number))
 
 
 def calculate_formula(formula_str: object, force: int) -> int:
     """Kompatibilitaets-Wrapper fuer Geister, Zauberentzug und Critter."""
     return evaluate_formula(formula_str, force)
+
+
+def evaluate_armor(value: object, force: int = 0) -> int:
+    """Liest die Critter-Spalte Ruestung: Zahl, Formel oder gehaertet (6H)."""
+    if _is_missing(value):
+        return 0
+    text = _HARDENED_ARMOR.sub("", str(value).strip()).strip()
+    text = text.replace("\u00d7", "*")
+    text = re.sub(r"(?<=[\w)])\s*[xX]\s*(?=[\w(])", "*", text)
+    return evaluate_formula(text, force)
 
 
 def calculate_drain(formula_str: object, force: int) -> int:
@@ -191,15 +223,42 @@ def split_list(value: object) -> list[str]:
     return [part.strip() for part in _LIST_PATTERN.split(str(value)) if part.strip()]
 
 
-def get_row(df: pd.DataFrame, name: str) -> pd.Series:
-    """Holt genau eine Zeile; bei doppelten Namen immer die erste Fundstelle."""
-    if name not in df.index:
-        raise KeyError(f"'{name}' ist in dieser Datenbank nicht enthalten.")
+def resolve_row_name(df: pd.DataFrame, name: object) -> object:
+    """Findet den Indexeintrag, auch nach Namensklammerung (Vampir (Infizierte))."""
+    text = str(name).strip() if name is not None else ""
+    if not text:
+        raise KeyError("Ein leerer Name ist in dieser Datenbank nicht enthalten.")
+    if text in df.index:
+        return text
+    for label in df.index:
+        if str(label).strip() == text:
+            return label
+    matches = [
+        label for label in df.index if str(label).startswith(f"{text} (")
+    ]
+    if matches:
+        return matches[0]
+    raise KeyError(f"'{text}' ist in dieser Datenbank nicht enthalten.")
 
-    entry = df.loc[name]
+
+def get_row(df: pd.DataFrame, name: str) -> pd.Series:
+    """Holt genau eine Zeile; bei mehrdeutigen Namen die erste Fundstelle."""
+    entry = df.loc[resolve_row_name(df, name)]
     if isinstance(entry, pd.DataFrame):
         entry = entry.iloc[0]
     return entry
+
+
+def critter_row_is_complete(row: pd.Series) -> bool:
+    """False bei leeren Critter-Zeilen ohne Attribute und ohne Kraftformel."""
+    if critter_uses_force(row):
+        return True
+    return any(not _is_missing(row.get(attribute)) for attribute in ATTRIBUTES)
+
+
+def spirit_hardened_armor(force: int) -> int:
+    """Immunitaet gegen normale Waffen: 2 x Kraftstufe."""
+    return 2 * max(1, int(force))
 
 
 @dataclass(frozen=True)
@@ -229,6 +288,10 @@ class Weapon:
             ammo=to_text(row.get("Munition"), "-"),
             source=to_text(row.get("Fundstelle"), "-"),
         )
+
+    def with_ap(self, ap: str) -> "Weapon":
+        """Neue Instanz mit manuell gesetzter Durchschlagskraft."""
+        return replace(self, ap=to_text(ap, "-") or "-")
 
     def summary(self) -> dict[str, str]:
         return {
@@ -276,6 +339,22 @@ def load_armor(df: pd.DataFrame, name: str) -> Armor:
     return Armor.from_row(name, get_row(df, name))
 
 
+def natural_armor_value(npc: "BaseNPC") -> int:
+    """CSV- bzw. formelbasierter Panzerungswert, ohne getragene Ruestung."""
+    if isinstance(npc, Spirit):
+        return spirit_hardened_armor(npc.force)
+    if isinstance(npc, Critter):
+        return npc.natural_armor()
+    return to_int(npc.row.get("Panzerung"))
+
+
+def worn_armor_total(base: int, armor: Armor | None) -> int:
+    """Getragene Ruestung ersetzt den Grundwert, Zubehoer ('+2') addiert."""
+    if armor is None:
+        return base
+    return base + armor.rating if armor.is_accessory else armor.rating
+
+
 class BaseNPC:
     """Gemeinsame Basis aller Archetypen."""
 
@@ -292,6 +371,13 @@ class BaseNPC:
         self.initiative_override: int | None = None
         self.weapons: list[Weapon] = []
         self.armor_item: Armor | None = None
+        self.essence = self._read_essence(row)
+
+    def _read_essence(self, row: pd.Series) -> float:
+        """Essenz aus der CSV; fehlt der Wert, gilt der Regelstandard 6."""
+        if "Essenz" not in row.index or _is_missing(row.get("Essenz")):
+            return DEFAULT_ESSENCE
+        return to_float(row.get("Essenz"), DEFAULT_ESSENCE)
 
     def _read_attributes(self, row: pd.Series) -> dict[str, int]:
         return {attribute: to_int(row.get(attribute)) for attribute in ATTRIBUTES}
@@ -327,6 +413,62 @@ class BaseNPC:
         """Hausregel: ein gemeinsamer Monitor in Hoehe des groesseren Wertes."""
         return max(self.physical_monitor, self.stun_monitor)
 
+    def physical_limit(self) -> int:
+        """Koerperliches Limit: aufrunden((STR x 2 + KON + REA) / 3)."""
+        total = (
+            self.attributes[STAERKE] * 2
+            + self.attributes["Konstitution"]
+            + self.attributes["Reaktion"]
+        )
+        return max(1, math.ceil(total / 3))
+
+    def mental_limit(self) -> int:
+        """Geistiges Limit: aufrunden((LOG x 2 + INT + WIL) / 3)."""
+        total = (
+            self.attributes["Logik"] * 2
+            + self.attributes["Intuition"]
+            + self.attributes["Willenskraft"]
+        )
+        return max(1, math.ceil(total / 3))
+
+    def social_limit(self) -> int:
+        """Soziales Limit: aufrunden((CHA x 2 + WIL + ESS) / 3)."""
+        total = (
+            self.attributes["Charisma"] * 2
+            + self.attributes["Willenskraft"]
+            + self.essence
+        )
+        return max(1, math.ceil(total / 3))
+
+    def limit_explanations(self) -> list[str]:
+        """Rechenweg der drei natuerlichen Limits."""
+        strength = self.attributes[STAERKE]
+        constitution = self.attributes["Konstitution"]
+        reaction = self.attributes["Reaktion"]
+        logic = self.attributes["Logik"]
+        intuition = self.attributes["Intuition"]
+        willpower = self.attributes["Willenskraft"]
+        charisma = self.attributes["Charisma"]
+        lines = [
+            (
+                f"koerperlich: aufrunden((STR {strength} x 2 + KON {constitution} "
+                f"+ REA {reaction}) / 3) = {self.physical_limit()}"
+            ),
+            (
+                f"geistig: aufrunden((LOG {logic} x 2 + INT {intuition} "
+                f"+ WIL {willpower}) / 3) = {self.mental_limit()}"
+            ),
+            (
+                f"sozial: aufrunden((CHA {charisma} x 2 + WIL {willpower} "
+                f"+ ESS {self.essence:g}) / 3) = {self.social_limit()}"
+            ),
+        ]
+        lines.extend(self.essence_notes())
+        return lines
+
+    def essence_notes(self) -> list[str]:
+        return []
+
     def details(self) -> dict[str, str]:
         """Kurze Zusatzwerte fuer die Anzeige."""
         return {
@@ -350,7 +492,6 @@ class MundaneNPC(BaseNPC):
         self.initiative_dice = parse_initiative_dice(row.get(INITIATIVWUERFEL))
         self.armor = to_int(row.get("Panzerung"))
         self.edge = to_int(row.get("Edge"))
-        self.essence = to_float(row.get("Essenz"))
         self.skills = {
             column: to_int(row[column])
             for column in row.index
@@ -392,6 +533,7 @@ class MagicianNPC(MundaneNPC):
         magic: int | None = None,
         spells: list[str] | None = None,
         skill_ratings: dict[str, int] | None = None,
+        tradition: str | None = None,
     ) -> None:
         super().__init__(name, row)
         self.magic_from_csv = to_int(row.get("Magie"))
@@ -399,6 +541,9 @@ class MagicianNPC(MundaneNPC):
             self.magic_from_csv or DEFAULT_MAGIC
         )
         self.spells = list(spells or [])
+        self.tradition = (
+            tradition if tradition in DRAIN_ATTRIBUTE else TRADITION_HERMETIC
+        )
 
         # Magische Fertigkeiten gehoeren immer dazu, auch wenn die CSV sie
         # nicht kennt oder auf 0 setzt.
@@ -414,10 +559,13 @@ class MagicianNPC(MundaneNPC):
     def magic_skills(self) -> dict[str, int]:
         return {skill: self.skills.get(skill, 0) for skill in MAGIC_SKILLS}
 
+    @property
+    def drain_attribute(self) -> str:
+        return DRAIN_ATTRIBUTE[self.tradition]
+
     def details(self) -> dict[str, str]:
         values = super().details()
         values["Magie"] = str(self.magic)
-        values["Zauber"] = str(len(self.spells))
         return values
 
     def spell_table(self, spell_db: pd.DataFrame, force: int) -> pd.DataFrame:
@@ -456,10 +604,15 @@ class Spirit(BaseNPC):
         }
         self.initiative_dice = parse_initiative_dice(row.get(INITIATIVWUERFEL), default=2)
         self.initiative_modifier = to_int(row.get(INIT_AENDERUNG))
-        self.unarmed_damage = to_text(row.get("Waffenlos"), "-")
+        self.unarmed_bonus = to_int(row.get("Waffenlos"))
         self.source = to_text(row.get("Fundstelle"), "-")
         self.powers = split_list(row.get("Standardkraft"))
         self.optional_powers = split_list(row.get("Optionale Kraft"))
+        self.armor = spirit_hardened_armor(self.force)
+        self.essence = float(self.force)
+
+    def essence_notes(self) -> list[str]:
+        return [f"Essenz = Kraftstufe {self.force}"]
 
     def _read_attributes(self, row: pd.Series) -> dict[str, int]:
         return {
@@ -469,10 +622,20 @@ class Spirit(BaseNPC):
             for attribute in ATTRIBUTES
         }
 
+    @property
+    def unarmed_damage(self) -> int:
+        """Staerke + Spalte Waffenlos, ohne Sonderregeln."""
+        return self.attributes[STAERKE] + self.unarmed_bonus
+
+    def natural_initiative_base(self) -> int:
+        """Initiative: Kraftstufe * 2 plus Spalte Aenderung Initiative."""
+        return self.force * 2 + self.initiative_modifier
+
     def details(self) -> dict[str, str]:
         values = super().details()
         values["Kraftstufe (F)"] = str(self.force)
-        values["Waffenloser Schaden"] = f"{self.unarmed_damage}K"
+        values["Panzerung"] = str(self.armor)
+        values["Waffenloser Schaden"] = f"{self.unarmed_damage}G"
         values["Fundstelle"] = self.source
         return values
 
@@ -499,7 +662,7 @@ class Critter(BaseNPC):
         self.force = max(1, min(int(force), MAX_FORCE)) if self.uses_force else 0
         super().__init__(name, row)
         self.category = to_text(row.get("Kategorie"), "-")
-        self.armor = to_int(row.get(RUESTUNG))
+        self.armor = self.natural_armor()
         self.source = f"{to_text(row.get('Quelle'), '-')} S. {to_text(row.get('Seite'), '-')}"
 
         force_value = self.force if self.uses_force else 0
@@ -523,6 +686,20 @@ class Critter(BaseNPC):
         else:
             self.formulas = {}
 
+        if "Essenz" not in row.index or _is_missing(row.get("Essenz")):
+            self.essence = (
+                float(self.force) if self.uses_force else DEFAULT_ESSENCE
+            )
+
+    def essence_notes(self) -> list[str]:
+        if "Essenz" in self.row.index and not _is_missing(self.row.get("Essenz")):
+            return []
+        if self.uses_force:
+            return [f"Essenz = Kraftstufe {self.force} (keine Spalte in der Critter-CSV)"]
+        return [
+            f"Essenz {DEFAULT_ESSENCE:g} (Standard, keine Spalte in der Critter-CSV)"
+        ]
+
     def _resolve_initiative(self, row: pd.Series) -> int:
         raw = row.get("Initiative")
         if self.uses_force:
@@ -544,6 +721,13 @@ class Critter(BaseNPC):
         if self._initiative_base:
             return self._initiative_base
         return super().natural_initiative_base()
+
+    def natural_armor(self) -> int:
+        """Panzerung aus der Spalte Ruestung, Formeln mit der Kraftstufe."""
+        return evaluate_armor(
+            self.row.get(RUESTUNG),
+            self.force if self.uses_force else 0,
+        )
 
     def details(self) -> dict[str, str]:
         values = super().details()
@@ -587,14 +771,20 @@ def equip(
     npc: BaseNPC,
     weapons: list[Weapon] | None = None,
     armor: Armor | None = None,
+    armor_rating: int | None = None,
 ) -> BaseNPC:
-    """Ruestet den NPC aus. Die Panzerung ersetzt den Wert aus der CSV."""
+    """Ruestet den NPC aus. Getragene Ruestung kommt auf den CSV-Grundwert."""
     npc.weapons = [weapon for weapon in (weapons or []) if weapon is not None]
+    npc.armor_item = None
+    npc.armor = natural_armor_value(npc)
 
     if armor is not None:
         npc.armor_item = armor
         # Zubehoer wie Helm ('+2') ergaenzt, alles andere ersetzt den Grundwert.
-        npc.armor = npc.armor + armor.rating if armor.is_accessory else armor.rating
+        npc.armor = worn_armor_total(npc.armor, armor)
+
+    if armor_rating is not None:
+        npc.armor = to_int(armor_rating)
 
     return npc
 
@@ -607,13 +797,19 @@ def create_npc(
     magic: int | None = None,
     spells: list[str] | None = None,
     skill_ratings: dict[str, int] | None = None,
+    tradition: str | None = None,
 ) -> BaseNPC:
     """Erzeugt den passenden Archetyp aus der jeweiligen Datenbank."""
     if archetype == ARCHETYPE_MUNDANE:
         return MundaneNPC.from_database(df, name)
     if archetype == ARCHETYPE_MAGICIAN:
         return MagicianNPC.from_database(
-            df, name, magic=magic, spells=spells, skill_ratings=skill_ratings
+            df,
+            name,
+            magic=magic,
+            spells=spells,
+            skill_ratings=skill_ratings,
+            tradition=tradition,
         )
     if archetype == ARCHETYPE_SPIRIT:
         return Spirit.from_database(df, name, force=force)
