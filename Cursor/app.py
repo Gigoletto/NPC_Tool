@@ -18,6 +18,7 @@ from PIL import Image
 
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 from src import data_loader
 from src import npc_engine as engine
@@ -414,31 +415,42 @@ def inject_layout_css() -> None:
         "}"
     )
     rules.append(_theme_override_css())
+    rules.append(
+        "div[class*='st-key-_theme_inject']{"
+        "display:none!important;height:0!important;overflow:hidden!important;"
+        "}"
+    )
     st.html(f"<style>{''.join(rules)}</style>")
+    _inject_theme_into_parent()
 
 
 def _theme_override_css() -> str:
-    """Cyan auch auf Streamlit Cloud, falls config.toml dort nicht greift."""
+    """Cyan fuer Buttons und Akzente, unabhaengig vom Cloud-Standardthema."""
     primary = THEME_PRIMARY
     hover = THEME_PRIMARY_HOVER
     ink = THEME_ON_PRIMARY
     return (
-        f":root,.stApp,[data-testid='stAppViewContainer']{{"
+        f":root,.stApp,[data-testid='stAppViewContainer'],[data-testid='stHeader']{{"
         f"--primary-color:{primary}!important;"
         f"--st-primary-color:{primary}!important;"
+        f"--primary:{primary}!important;"
         "}}"
         "[data-testid='stBaseButton-primary'],"
         "[data-testid='stBaseButton-primaryFormSubmit'],"
+        "[data-testid='stBaseButton-primaryNoPadding'],"
         "button[kind='primary'],"
+        ".stButton button[kind='primary'],"
+        ".stDownloadButton button,"
         ".stDownloadButton button[kind='primary']{"
         f"background-color:{primary}!important;"
+        f"background-image:none!important;"
         f"border-color:{primary}!important;"
         f"color:{ink}!important;"
         "}"
         "[data-testid='stBaseButton-primary']:hover,"
         "[data-testid='stBaseButton-primaryFormSubmit']:hover,"
         "button[kind='primary']:hover,"
-        ".stDownloadButton button[kind='primary']:hover{"
+        ".stDownloadButton button:hover{"
         f"background-color:{hover}!important;"
         f"border-color:{hover}!important;"
         f"color:{ink}!important;"
@@ -450,7 +462,9 @@ def _theme_override_css() -> str:
         f"color:{primary}!important;"
         "}"
         "[data-testid='stSliderThumb'],"
-        "[data-testid='stSliderTickBarFilled']{"
+        "[data-testid='stSliderTickBarFilled'],"
+        "[data-testid='stThumbValue']{"
+        f"background:{primary}!important;"
         f"background-color:{primary}!important;"
         f"border-color:{primary}!important;"
         "}"
@@ -459,14 +473,60 @@ def _theme_override_css() -> str:
         f"background-color:{primary}!important;"
         "}"
         "[data-testid='stCheckbox'] [aria-checked='true'],"
-        "[data-testid='stRadio'] [aria-checked='true']{"
+        "[data-testid='stRadio'] [aria-checked='true'],"
+        "[data-baseweb='checkbox'][aria-checked='true'],"
+        "[data-baseweb='radio'] [aria-checked='true']{"
         f"background-color:{primary}!important;"
         f"border-color:{primary}!important;"
+        "}"
+        "[data-baseweb='slider'] [role='progressbar'],"
+        "div[data-baseweb='slider']>div>div{"
+        f"background-color:{primary}!important;"
         "}"
         "a,a:visited{"
         f"color:{primary}!important;"
         "}"
     )
+
+
+def _inject_theme_into_parent() -> None:
+    """Schreibt Cyan in das echte Browserfenster (Streamlit-Cloud-Iframe)."""
+    css = json.dumps(_theme_override_css())
+    script = (
+        "<script>(function(){"
+        "var doc=window.parent.document;"
+        f"var css={css};"
+        "var id='sr5-cyan-theme';"
+        "var tag=doc.getElementById(id);"
+        "if(!tag){tag=doc.createElement('style');tag.id=id;doc.head.appendChild(tag);}"
+        "tag.textContent=css;"
+        "function paint(){"
+        "doc.querySelectorAll('style').forEach(function(el){"
+        "if(el.id===id)return;"
+        "var t=el.textContent||'';"
+        "if(!/#ff4b4b|#f63366|#ff2b2b|255\\s*,\\s*75\\s*,\\s*75/i.test(t))return;"
+        "el.textContent=t.replace(/#ff4b4b|#f63366|#ff2b2b/gi,'#00E5FF')"
+        ".replace(/rgb\\(\\s*255\\s*,\\s*75\\s*,\\s*75\\s*\\)/gi,'rgb(0, 229, 255)')"
+        ".replace(/rgba\\(\\s*255\\s*,\\s*75\\s*,\\s*75\\s*,/gi,'rgba(0, 229, 255,');"
+        "});"
+        "doc.querySelectorAll('[style]').forEach(function(el){"
+        "var s=el.getAttribute('style')||'';"
+        "if(!/#ff4b4b|#f63366|#ff2b2b|255\\s*,\\s*75\\s*,\\s*75/i.test(s))return;"
+        "el.setAttribute('style',s.replace(/#ff4b4b|#f63366|#ff2b2b/gi,'#00E5FF')"
+        ".replace(/rgb\\(\\s*255\\s*,\\s*75\\s*,\\s*75\\s*\\)/gi,'rgb(0, 229, 255)')"
+        ".replace(/rgba\\(\\s*255\\s*,\\s*75\\s*,\\s*75\\s*,/gi,'rgba(0, 229, 255,'));"
+        "});"
+        "}"
+        "paint();"
+        "if(!window.parent.__sr5ThemeWatch){"
+        "window.parent.__sr5ThemeWatch=true;"
+        "new MutationObserver(paint).observe(doc.documentElement,"
+        "{subtree:true,childList:true});"
+        "}"
+        "})();</script>"
+    )
+    with st.container(key="_theme_inject"):
+        components.html(script, height=0, width=0)
 
 
 def render_cards_per_row_control() -> int:
