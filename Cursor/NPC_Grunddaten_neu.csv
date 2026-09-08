@@ -1,0 +1,10 @@
+Name;Konstitution;Geschick;Reaktion;Stärke;Willenskraft;Logik;Intuition;Charisma;Edge;Magie;Panzerung;Initiativwürfel;Akrobatik;Antimagie;Astralkampf;Beschwören;Gewehre;Klingenwaffen;Knüppel;Pistolen;Projektilwaffen;Schleichen;Schnellfeuerwaffen;Schwere Waffen;Schwimmen;Spruchzauberei;Waffenloser Kampf;Wahrnehmung;Wurfwaffen
+Ganger_einfach;3;4;3;4;3;2;3;3;0;0;6;+1W6;3;0;0;0;3;5;4;2;2;4;2;2;4;0;4;4;3
+Ganger_normal;4;4;4;5;3;2;3;3;1;0;9;+2W6;3;0;0;0;3;6;5;3;3;5;3;3;4;0;5;4;3
+Ganger_stark;6;5;6;6;4;3;5;4;2;0;12;+3W6;5;0;0;0;3;6;6;4;3;5;3;3;4;0;6;5;4
+Konzern_einfach;4;5;5;4;3;5;4;3;0;0;7;+1W6;3;0;0;0;5;4;4;5;5;4;5;5;4;0;4;5;3
+Konzern_normal;6;6;5;5;3;5;4;4;1;0;10;+2W6;4;0;0;0;5;4;4;5;5;5;5;5;4;0;5;6;3
+Konzern_stark;7;6;5;6;4;6;5;5;2;0;14;+3W6;4;0;0;0;5;5;5;6;6;5;6;7;4;0;6;6;3
+Zauberer_einfach;3;4;4;2;4;5;4;4;0;5;6;+1W6;3;6;4;5;0;4;3;1;0;4;0;0;4;6;2;5;2
+Zauberer_normal;4;5;4;3;5;6;5;4;1;7;8;+2W6;3;8;6;7;0;5;4;2;0;5;0;0;4;8;3;6;2
+Zauberer_stark;4;6;4;4;5;7;5;5;2;9;10;+3W6;4;10;8;9;0;5;5;2;0;5;0;0;4;10;4;6;2

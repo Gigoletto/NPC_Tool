@@ -49,14 +49,9 @@ _FORMULA_SAFE_PATTERN = re.compile(r"^[\d+\-*/().]+$")
 MIN_SPIRIT_ATTRIBUTE = 1
 MIN_DRAIN = 2
 MAX_FORCE = 25
-DEFAULT_ESSENCE = 6.0
 
-# Fertigkeiten, die jeder Zauberer besitzt - unabhaengig vom Wert in der CSV.
-# 'Herbeirufen' ist in Fertigkeiten.csv der Name der Beschwoerungsfertigkeit.
-MAGIC_SKILLS = ("Spruchzauberei", "Antimagie", "Herbeirufen")
-
-DEFAULT_MAGIC = 6
-DEFAULT_MAGIC_SKILL = 4
+# Magische Fertigkeiten der Zauberer-Vorlagen; die Stufen stehen in der CSV.
+BESCHWOEREN = "Beschw\u00f6ren"  # Beschwoeren
 
 TRADITION_HERMETIC = "Hermetiker"
 TRADITION_SHAMAN = "Schamane"
@@ -80,6 +75,9 @@ ARCHETYPE_DATABASE = {
     ARCHETYPE_SPIRIT: "Geister",
     ARCHETYPE_CRITTER: "Critter",
 }
+
+METATYPE_DATABASE = "Anpassung_Metatypen"
+DEFAULT_METATYPE = "Mensch"
 
 _MISSING_VALUES = {"", "-", "--", "?", "n/a", "na", "nan", "none", "\u2013", "\u2014"}
 
@@ -114,7 +112,7 @@ def to_int(value: object, default: int = 0) -> int:
 
 
 def to_float(value: object, default: float = 0.0) -> float:
-    """Wie to_int, behaelt aber Nachkommastellen (z. B. Essenz 5,5)."""
+    """Wie to_int, behaelt aber Nachkommastellen."""
     if _is_missing(value):
         return default
     if isinstance(value, bool):
@@ -133,6 +131,13 @@ def to_text(value: object, default: str = "") -> str:
     if _is_missing(value):
         return default
     return str(value).strip()
+
+
+def normalize_skill_name(skill: str) -> str:
+    """Alte Saves mit 'Herbeirufen' auf 'Beschwoeren' umbiegen."""
+    if skill == "Herbeirufen":
+        return BESCHWOEREN
+    return skill
 
 
 def contains_force_reference(value: object) -> bool:
@@ -371,13 +376,6 @@ class BaseNPC:
         self.initiative_override: int | None = None
         self.weapons: list[Weapon] = []
         self.armor_item: Armor | None = None
-        self.essence = self._read_essence(row)
-
-    def _read_essence(self, row: pd.Series) -> float:
-        """Essenz aus der CSV; fehlt der Wert, gilt der Regelstandard 6."""
-        if "Essenz" not in row.index or _is_missing(row.get("Essenz")):
-            return DEFAULT_ESSENCE
-        return to_float(row.get("Essenz"), DEFAULT_ESSENCE)
 
     def _read_attributes(self, row: pd.Series) -> dict[str, int]:
         return {attribute: to_int(row.get(attribute)) for attribute in ATTRIBUTES}
@@ -432,11 +430,10 @@ class BaseNPC:
         return max(1, math.ceil(total / 3))
 
     def social_limit(self) -> int:
-        """Soziales Limit: aufrunden((CHA x 2 + WIL + ESS) / 3)."""
+        """Soziales Limit: aufrunden((CHA x 2 + WIL) / 3)."""
         total = (
             self.attributes["Charisma"] * 2
             + self.attributes["Willenskraft"]
-            + self.essence
         )
         return max(1, math.ceil(total / 3))
 
@@ -449,7 +446,7 @@ class BaseNPC:
         intuition = self.attributes["Intuition"]
         willpower = self.attributes["Willenskraft"]
         charisma = self.attributes["Charisma"]
-        lines = [
+        return [
             (
                 f"koerperlich: aufrunden((STR {strength} x 2 + KON {constitution} "
                 f"+ REA {reaction}) / 3) = {self.physical_limit()}"
@@ -459,15 +456,10 @@ class BaseNPC:
                 f"+ WIL {willpower}) / 3) = {self.mental_limit()}"
             ),
             (
-                f"sozial: aufrunden((CHA {charisma} x 2 + WIL {willpower} "
-                f"+ ESS {self.essence:g}) / 3) = {self.social_limit()}"
+                f"sozial: aufrunden((CHA {charisma} x 2 + WIL {willpower}"
+                f") / 3) = {self.social_limit()}"
             ),
         ]
-        lines.extend(self.essence_notes())
-        return lines
-
-    def essence_notes(self) -> list[str]:
-        return []
 
     def details(self) -> dict[str, str]:
         """Kurze Zusatzwerte fuer die Anzeige."""
@@ -502,27 +494,11 @@ class MundaneNPC(BaseNPC):
         values = super().details()
         values["Edge"] = str(self.edge)
         values["Panzerung"] = str(self.armor)
-        values["Essenz"] = f"{self.essence:g}"
         return values
-
-    def skill_table(self, only_trained: bool = True) -> pd.DataFrame:
-        skills = {
-            name: value
-            for name, value in self.skills.items()
-            if value > 0 or not only_trained
-        }
-        table = pd.DataFrame(
-            {"Fertigkeit": list(skills), "Stufe": list(skills.values())}
-        )
-        return table.sort_values("Stufe", ascending=False, ignore_index=True)
 
 
 class MagicianNPC(MundaneNPC):
-    """Magisch begabter NPC: Grundwerte wie mundan, dazu Magie und Zauber.
-
-    Die Basis-Metatypen fuehren in der CSV ueberall eine 0 bei Magie und den
-    magischen Fertigkeiten. Diese Nullen werden hier bewusst uebersteuert.
-    """
+    """Magisch begabter NPC: Grundwerte wie mundan, dazu Magie und Zauber."""
 
     ARCHETYPE = ARCHETYPE_MAGICIAN
 
@@ -532,32 +508,15 @@ class MagicianNPC(MundaneNPC):
         row: pd.Series,
         magic: int | None = None,
         spells: list[str] | None = None,
-        skill_ratings: dict[str, int] | None = None,
         tradition: str | None = None,
     ) -> None:
         super().__init__(name, row)
         self.magic_from_csv = to_int(row.get("Magie"))
-        self.magic = int(magic) if magic is not None else (
-            self.magic_from_csv or DEFAULT_MAGIC
-        )
+        self.magic = int(magic) if magic is not None else self.magic_from_csv
         self.spells = list(spells or [])
         self.tradition = (
             tradition if tradition in DRAIN_ATTRIBUTE else TRADITION_HERMETIC
         )
-
-        # Magische Fertigkeiten gehoeren immer dazu, auch wenn die CSV sie
-        # nicht kennt oder auf 0 setzt.
-        for skill in MAGIC_SKILLS:
-            self.skills.setdefault(skill, 0)
-            if self.skills[skill] <= 0:
-                self.skills[skill] = DEFAULT_MAGIC_SKILL
-
-        for skill, rating in (skill_ratings or {}).items():
-            self.skills[skill] = to_int(rating)
-
-    @property
-    def magic_skills(self) -> dict[str, int]:
-        return {skill: self.skills.get(skill, 0) for skill in MAGIC_SKILLS}
 
     @property
     def drain_attribute(self) -> str:
@@ -609,10 +568,6 @@ class Spirit(BaseNPC):
         self.powers = split_list(row.get("Standardkraft"))
         self.optional_powers = split_list(row.get("Optionale Kraft"))
         self.armor = spirit_hardened_armor(self.force)
-        self.essence = float(self.force)
-
-    def essence_notes(self) -> list[str]:
-        return [f"Essenz = Kraftstufe {self.force}"]
 
     def _read_attributes(self, row: pd.Series) -> dict[str, int]:
         return {
@@ -686,20 +641,6 @@ class Critter(BaseNPC):
         else:
             self.formulas = {}
 
-        if "Essenz" not in row.index or _is_missing(row.get("Essenz")):
-            self.essence = (
-                float(self.force) if self.uses_force else DEFAULT_ESSENCE
-            )
-
-    def essence_notes(self) -> list[str]:
-        if "Essenz" in self.row.index and not _is_missing(self.row.get("Essenz")):
-            return []
-        if self.uses_force:
-            return [f"Essenz = Kraftstufe {self.force} (keine Spalte in der Critter-CSV)"]
-        return [
-            f"Essenz {DEFAULT_ESSENCE:g} (Standard, keine Spalte in der Critter-CSV)"
-        ]
-
     def _resolve_initiative(self, row: pd.Series) -> int:
         raw = row.get("Initiative")
         if self.uses_force:
@@ -749,6 +690,7 @@ def apply_overrides(
     edge: int | None = None,
     initiative_base: int | None = None,
     initiative_dice: int | None = None,
+    skills: dict[str, int] | None = None,
 ) -> BaseNPC:
     """Uebernimmt am Spieltisch angepasste Werte in den NPC."""
     for attribute, value in (attributes or {}).items():
@@ -763,6 +705,9 @@ def apply_overrides(
         npc.initiative_override = to_int(initiative_base)
     if initiative_dice is not None:
         npc.initiative_dice = to_int(initiative_dice)
+    if skills is not None and getattr(npc, "skills", None) is not None:
+        for name, value in skills.items():
+            npc.skills[normalize_skill_name(name)] = to_int(value)
 
     return npc
 
@@ -789,6 +734,38 @@ def equip(
     return npc
 
 
+def uses_metatype(archetype: str) -> bool:
+    """Mundan und Zauberer werden aus Vorlage plus Metatyp zusammengesetzt."""
+    return archetype in (ARCHETYPE_MUNDANE, ARCHETYPE_MAGICIAN)
+
+
+def template_names(df: pd.DataFrame, archetype: str) -> list[str]:
+    """Vorlagen in CSV-Reihenfolge, nach Magie-Spalte zum Archetyp passend."""
+    names = [str(name) for name in dict.fromkeys(df.index)]
+    magician: list[str] = []
+    mundane: list[str] = []
+    for name in names:
+        if to_int(get_row(df, name).get("Magie")) > 0:
+            magician.append(name)
+        else:
+            mundane.append(name)
+    if archetype == ARCHETYPE_MAGICIAN:
+        return magician or names
+    if archetype == ARCHETYPE_MUNDANE:
+        return mundane or names
+    return names
+
+
+def apply_metatype(npc: BaseNPC, row: pd.Series) -> BaseNPC:
+    """Addiert die Metatyp-Anpassungen auf Attribute und Edge."""
+    for attribute in ATTRIBUTES:
+        npc.attributes[attribute] = max(
+            0, npc.attributes[attribute] + to_int(row.get(attribute))
+        )
+    npc.edge = max(0, npc.edge + to_int(row.get("Edge")))
+    return npc
+
+
 def create_npc(
     archetype: str,
     name: str,
@@ -796,7 +773,6 @@ def create_npc(
     force: int = 4,
     magic: int | None = None,
     spells: list[str] | None = None,
-    skill_ratings: dict[str, int] | None = None,
     tradition: str | None = None,
 ) -> BaseNPC:
     """Erzeugt den passenden Archetyp aus der jeweiligen Datenbank."""
@@ -808,7 +784,6 @@ def create_npc(
             name,
             magic=magic,
             spells=spells,
-            skill_ratings=skill_ratings,
             tradition=tradition,
         )
     if archetype == ARCHETYPE_SPIRIT:

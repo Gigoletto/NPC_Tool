@@ -1,0 +1,6 @@
+Name;Konstitution;Geschick;Reaktion;Stärke;Willenskraft;Logik;Intuition;Charisma;Edge
+Mensch;0;0;0;0;0;0;0;0;1
+Elf;0;1;0;0;0;0;0;2;0
+Ork;3;0;0;2;0;-1;0;-1;0
+Troll;4;-1;0;4;0;-1;-1;-2;0
+Zwerg;2;0;-1;2;1;0;0;-1;0

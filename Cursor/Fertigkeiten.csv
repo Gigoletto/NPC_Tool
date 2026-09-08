@@ -69,7 +69,7 @@ Laufen;STR;Körperliche Aktionsfertigkeiten;True;Athletics;SR5;133
 Schleichen;AGI;Körperliche Aktionsfertigkeiten;True;Stealth;SR5;133
 Software;LOG;Technische Aktionsfertigkeiten;False;Electronics;SR5;145
 Spruchzauberei;MAG;Magische Aktionsfertigkeiten;False;Sorcery;SR5;143
-Herbeirufen;MAG;Magische Aktionsfertigkeiten;False;Conjuring;SR5;143
+Beschwören;MAG;Magische Aktionsfertigkeiten;False;Conjuring;SR5;143
 Survival;WIL;Körperliche Aktionsfertigkeiten;True;Outdoors;SR5;133
 Schwimmen;STR;Körperliche Aktionsfertigkeiten;True;Athletics;SR5;134
 Wurfwaffen;AGI;Kampf-Aktionsfertigkeiten;True;;SR5;132

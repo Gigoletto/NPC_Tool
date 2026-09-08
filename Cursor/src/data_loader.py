@@ -18,16 +18,15 @@ RUESTUNG = "R\u00fcstung"  # Ruestung
 KRAEFTE = "Kr\u00e4fte"  # Kraefte
 
 DATASETS: dict[str, str] = {
-    "NPC_Grunddaten": "NPC_Grunddaten.csv",
+    "NPC_Grunddaten": "NPC_Grunddaten_neu.csv",
+    "Anpassung_Metatypen": "Anpassung_Metatypen.csv",
     "Geister": "Geister.csv",
     "Critter": "Critter.csv",
     "Waffen": "Waffen.csv",
     "Zauber": "Zauber.csv",
     "Fertigkeiten": "Fertigkeiten.csv",
-    "Cyberware": "Cyberware.csv",
     RUESTUNG: f"{RUESTUNG}.csv",
     KRAEFTE: f"{KRAEFTE}.csv",
-    "Metamagie": "Metamagie.csv",
 }
 
 
@@ -158,6 +157,10 @@ def load_npc_grunddaten() -> pd.DataFrame:
     return load_database("NPC_Grunddaten")
 
 
+def load_anpassung_metatypen() -> pd.DataFrame:
+    return load_database("Anpassung_Metatypen")
+
+
 def load_geister() -> pd.DataFrame:
     return load_database("Geister")
 
@@ -178,20 +181,12 @@ def load_fertigkeiten() -> pd.DataFrame:
     return load_database("Fertigkeiten")
 
 
-def load_cyberware() -> pd.DataFrame:
-    return load_database("Cyberware")
-
-
 def load_ruestung() -> pd.DataFrame:
     return load_database(RUESTUNG)
 
 
 def load_kraefte() -> pd.DataFrame:
     return load_database(KRAEFTE)
-
-
-def load_metamagie() -> pd.DataFrame:
-    return load_database("Metamagie")
 
 
 def load_all() -> dict[str, pd.DataFrame]:

@@ -34,6 +34,7 @@ ATTRIBUTE_BY_CODE: dict[str, str] = {
 FALLBACK_SKILL_ATTRIBUTES: dict[str, str] = {
     "Akrobatik": "Geschick",
     "Antimagie": "Magie",
+    "Astralkampf": "Willenskraft",
     "Gewehre": "Geschick",
     "Klingenwaffen": "Geschick",
     "Kn\u00fcppel": "Geschick",  # Knueppel
@@ -44,7 +45,7 @@ FALLBACK_SKILL_ATTRIBUTES: dict[str, str] = {
     "Schwere Waffen": "Geschick",
     "Schwimmen": engine.STAERKE,
     "Spruchzauberei": "Magie",
-    "Herbeirufen": "Magie",
+    engine.BESCHWOEREN: "Magie",
     "Waffenloser Kampf": "Geschick",
     "Wahrnehmung": "Intuition",
     "Wurfwaffen": "Geschick",
@@ -86,11 +87,9 @@ WEAPON_SKILL_RULES: tuple[tuple[str, str], ...] = (
 
 FALLBACK_WEAPON_SKILL = "Waffenloser Kampf"
 
-# Zauberer haben keine Astralkampf-Spalte; die Stufe kommt aus dieser Fertigkeit.
 ASTRAL_COMBAT_SKILL = "Astralkampf"
-ASTRAL_COMBAT_SKILL_SOURCE = "Schwere Waffen"
 
-MAGIC_ATTACK_SKILLS = ("Spruchzauberei", "Herbeirufen", ASTRAL_COMBAT_SKILL)
+MAGIC_ATTACK_SKILLS = ("Spruchzauberei", engine.BESCHWOEREN, ASTRAL_COMBAT_SKILL)
 
 CRITTER_SKILL_NOTE = (
     "Hausregel: Critter ohne Fertigkeitswerte, Probe = Attribut x 2"
@@ -111,7 +110,7 @@ SKILL_LIMIT_OVERRIDES: dict[str, str] = {
     "Wahrnehmung": LIMIT_MENTAL,
     "Spruchzauberei": LIMIT_SPELL_FORCE,
     "Ritualzauberei": LIMIT_SPELL_FORCE,
-    "Herbeirufen": LIMIT_SPIRIT_FORCE,
+    engine.BESCHWOEREN: LIMIT_SPIRIT_FORCE,
     "Astralkampf": LIMIT_MENTAL,
 }
 
@@ -128,7 +127,7 @@ FALLBACK_SKILL_LIMITS: dict[str, str] = {
     "Schwere Waffen": LIMIT_PHYSICAL,
     "Schwimmen": LIMIT_PHYSICAL,
     "Spruchzauberei": LIMIT_SPELL_FORCE,
-    "Herbeirufen": LIMIT_SPIRIT_FORCE,
+    engine.BESCHWOEREN: LIMIT_SPIRIT_FORCE,
     "Waffenloser Kampf": LIMIT_PHYSICAL,
     "Wahrnehmung": LIMIT_MENTAL,
     "Wurfwaffen": LIMIT_PHYSICAL,
@@ -270,7 +269,7 @@ def inherent_limit_text(
     kind: str,
     magic_force: int | None = None,
 ) -> str | None:
-    """Text in eckigen Klammern: Zahl, bei Zauber und Herbeirufen nur KS."""
+    """Text in eckigen Klammern: Zahl, bei Zauber und Beschwoeren nur KS."""
     del magic_force
     if kind == LIMIT_PHYSICAL:
         return str(npc.physical_limit())
@@ -464,31 +463,6 @@ def spirit_unarmed_attack_pool(npc: engine.Spirit, modifier: int = 0) -> DicePoo
     )
 
 
-def magician_astral_pool(npc: engine.MagicianNPC, modifier: int = 0) -> DicePool:
-    """WIL + Astralkampf; die Stufe stammt mangels Spalte aus Schwere Waffen."""
-    rating = engine.to_int(getattr(npc, "skills", {}).get(ASTRAL_COMBAT_SKILL_SOURCE))
-    return DicePool(
-        ASTRAL_COMBAT_SKILL,
-        (
-            ("Willenskraft", npc.attributes["Willenskraft"]),
-            (ASTRAL_COMBAT_SKILL, rating),
-        ),
-        modifier,
-    )
-
-
-def critter_attribute_pool(
-    npc: engine.Critter, label: str, attribute: str, modifier: int = 0
-) -> DicePool:
-    """Hausregel: Critter-Probe als Attribut + Attribut (Attribut x 2)."""
-    value = attribute_value(npc, attribute)
-    return DicePool(
-        label,
-        ((attribute, value), (label, value)),
-        modifier,
-    )
-
-
 def _mundane_pools(
     npc: engine.MundaneNPC, skill_map: dict[str, str] | None, modifier: int
 ) -> list[DicePool]:
@@ -509,15 +483,21 @@ def _mundane_pools(
 def _magician_pools(
     npc: engine.MagicianNPC, skill_map: dict[str, str] | None, modifier: int
 ) -> list[DicePool]:
+    """Wie mundan, zusaetzlich Entzug zwischen Verteidigung und Fertigkeiten."""
     pools = _mundane_pools(npc, skill_map, modifier)
-    # Die magischen Proben stehen immer vorn, auch bei Stufe 0.
-    magic_pools = [
-        skill_pool(npc, skill, skill_map, modifier) for skill in engine.MAGIC_SKILLS
-    ]
-    magic_pools.append(magician_astral_pool(npc, modifier))
-    magic_labels = {pool.label for pool in magic_pools}
-    rest = [pool for pool in pools[2:] if pool.label not in magic_labels]
-    return pools[:2] + [drain_pool(npc, modifier)] + magic_pools + rest
+    return pools[:2] + [drain_pool(npc, modifier)] + pools[2:]
+
+
+def critter_attribute_pool(
+    npc: engine.Critter, label: str, attribute: str, modifier: int = 0
+) -> DicePool:
+    """Hausregel: Critter-Probe als Attribut + Attribut (Attribut x 2)."""
+    value = attribute_value(npc, attribute)
+    return DicePool(
+        label,
+        ((attribute, value), (label, value)),
+        modifier,
+    )
 
 
 def spirit_damage_resistance_pool(

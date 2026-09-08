@@ -18,7 +18,6 @@ from PIL import Image
 
 import pandas as pd
 import streamlit as st
-import streamlit.components.v1 as components
 
 from src import data_loader
 from src import npc_engine as engine
@@ -62,6 +61,8 @@ INI_SELECTED_KEY = "ini_npc_multiselect"
 CARDS_PER_ROW_KEY = "dashboard_cards_per_row"
 GENERATOR_ARCHETYPE_KEY = "generator_archetype"
 GENERATOR_ARCHETYPE_RADIO_KEY = "generator_archetype_radio"
+GENERATOR_METATYPE_KEY = "generator_metatype"
+GENERATOR_NAME_KEY = "generator_name"
 MAIN_TAB_KEY = "main_tab"
 TAB_DASHBOARD = "dashboard"
 TAB_GENERATOR = "generator"
@@ -87,9 +88,6 @@ ATTRIBUTE_SHORT = {
 THEME_PRIMARY = "#00E5FF"
 THEME_PRIMARY_HOVER = "#00B8D4"
 THEME_ON_PRIMARY = "#0E1117"
-
-# 'Herbeirufen' ist der Name der Beschwoerungsfertigkeit in Fertigkeiten.csv.
-MAGIC_SKILL_LABELS = {"Herbeirufen": "Herbeirufen (Beschw\u00f6ren)"}
 
 
 def _fold_icon_name(name: str) -> str:
@@ -304,6 +302,27 @@ def format_limits_line(npc: engine.BaseNPC) -> str:
         f"geistig **{npc.mental_limit()}** \u00b7 "
         f"sozial **{npc.social_limit()}**"
     )
+
+
+def render_dashboard_edge(
+    npc: engine.BaseNPC, config: dict, frames: dict[str, pd.DataFrame]
+) -> None:
+    """Edge direkt unter den Limits, manuell aenderbar."""
+    baseline = instantiate_npc(config, frames)
+    natural_edge = int(baseline.edge) if baseline is not None else int(npc.edge)
+    edge_key = f"edge_card_{config['uid']}"
+    _seed_widget(edge_key, int(npc.edge))
+    edge = int(
+        st.number_input(
+            "Edge",
+            min_value=0,
+            max_value=12,
+            step=1,
+            key=edge_key,
+        )
+    )
+    config["edge"] = edge if edge != natural_edge else None
+    engine.apply_overrides(npc, edge=edge)
 
 
 def npc_magic_force(npc: engine.BaseNPC, config: dict | None) -> int | None:
@@ -580,6 +599,24 @@ def _theme_override_css() -> str:
         "a,a:visited{"
         f"color:{primary}!important;"
         "}"
+        "[data-testid='stButtonGroup'] button[data-selected],"
+        "[data-testid='stButtonGroup'] button[aria-checked='true']{"
+        f"background-color:{primary}!important;"
+        f"color:{ink}!important;"
+        "}"
+        "[data-testid='stButtonGroup'] button[data-selected] *,"
+        "[data-testid='stButtonGroup'] button[aria-checked='true'] *{"
+        f"color:{ink}!important;"
+        "}"
+        "[data-testid='stButtonGroup'] button[data-selected]:hover,"
+        "[data-testid='stButtonGroup'] button[aria-checked='true']:hover{"
+        f"background-color:{hover}!important;"
+        f"color:{ink}!important;"
+        "}"
+        "[data-testid='stButtonGroup'] button[data-selected]:hover *,"
+        "[data-testid='stButtonGroup'] button[aria-checked='true']:hover *{"
+        f"color:{ink}!important;"
+        "}"
     )
 
 
@@ -641,7 +678,7 @@ def _inject_theme_into_parent() -> None:
         "})();</script>"
     )
     with st.container(key="_theme_inject"):
-        components.html(script, height=0, width=0)
+        st.iframe(script, height=1)
 
 
 def render_cards_per_row_control() -> int:
@@ -711,18 +748,34 @@ def instantiate_npc(
     if df is None:
         return None
     try:
-        return engine.create_npc(
+        npc = engine.create_npc(
             config["archetype"],
             config["name"],
             df,
             force=config.get("force", 4),
             magic=config.get("magic"),
             spells=config.get("spells", []),
-            skill_ratings=config.get("skill_ratings", {}),
             tradition=config.get("tradition"),
         )
     except KeyError:
         return None
+    return apply_metatype_from_frames(npc, config, frames)
+
+
+def apply_metatype_from_frames(
+    npc: engine.BaseNPC, config: dict, frames: dict[str, pd.DataFrame]
+) -> engine.BaseNPC:
+    """Rechnet den gewaehlten Metatyp auf Mundan- und Zauberer-Vorlagen."""
+    if not engine.uses_metatype(config.get("archetype", "")):
+        return npc
+    name = config.get("metatype")
+    table = frames.get(engine.METATYPE_DATABASE)
+    if not name or table is None:
+        return npc
+    try:
+        return engine.apply_metatype(npc, engine.get_row(table, name))
+    except KeyError:
+        return npc
 
 
 def npc_baselines(npc: engine.BaseNPC) -> dict:
@@ -748,6 +801,7 @@ def build_npc(config: dict, frames: dict[str, pd.DataFrame]) -> engine.BaseNPC |
         edge=config.get("edge"),
         initiative_base=config.get("initiative"),
         initiative_dice=config.get("initiative_dice"),
+        skills=config.get("skill_ratings"),
     )
     equip_from_config(npc, config, frames)
     return npc
@@ -822,6 +876,21 @@ def select_npc_config(frames: dict[str, pd.DataFrame]) -> dict | None:
         st.error(f"Datenbank '{database}' ist nicht geladen.")
         return None
 
+    metatype: str | None = None
+    if engine.uses_metatype(archetype):
+        meta_df = frames.get(engine.METATYPE_DATABASE)
+        if meta_df is None:
+            st.error(
+                f"Datenbank '{engine.METATYPE_DATABASE}' ist nicht geladen."
+            )
+            return None
+        metatypes = [str(name) for name in dict.fromkeys(meta_df.index)]
+        if not metatypes:
+            st.warning("Keine Metatypen vorhanden.")
+            return None
+        _ensure_choice(GENERATOR_METATYPE_KEY, metatypes)
+        metatype = st.selectbox("Metatyp", metatypes, key=GENERATOR_METATYPE_KEY)
+
     fields = st.columns(3)
     slot = 0
 
@@ -842,18 +911,28 @@ def select_npc_config(frames: dict[str, pd.DataFrame]) -> dict | None:
                 f"{hidden} Critter ohne Attributswerte ausgeblendet (z. B. Bugul)."
             )
 
-    names = sorted(dict.fromkeys(df.index))
+    if engine.uses_metatype(archetype):
+        names = engine.template_names(df, archetype)
+    else:
+        names = sorted(dict.fromkeys(df.index))
     if not names:
         st.warning("Keine Auswahl vorhanden.")
         return None
 
-    name = fields[slot].selectbox("Name", names)
+    _ensure_choice(GENERATOR_NAME_KEY, names)
+    name = fields[slot].selectbox(
+        "Name",
+        names,
+        key=GENERATOR_NAME_KEY,
+        format_func=template_display_name,
+    )
     slot += 1
 
     config = {
         "uid": "",
         "archetype": archetype,
         "name": name,
+        "metatype": metatype,
         "force": 4,
         "uses_force": False,
         "magic": None,
@@ -886,42 +965,31 @@ def select_npc_config(frames: dict[str, pd.DataFrame]) -> dict | None:
             )
     elif archetype == engine.ARCHETYPE_MAGICIAN:
         row = engine.get_row(df, name)
+        magic_key = f"generator_magic_{name}"
+        magic_preset = min(
+            engine.MAX_FORCE,
+            max(1, engine.to_int(row.get("Magie"))),
+        )
+        _seed_widget(magic_key, magic_preset)
         config["magic"] = int(
             fields[slot].slider(
                 "Magie-Attribut",
                 1,
                 engine.MAX_FORCE,
-                min(
-                    engine.MAX_FORCE,
-                    engine.to_int(row.get("Magie")) or engine.DEFAULT_MAGIC,
-                ),
+                key=magic_key,
                 help="Unabhaengig vom Wert in der CSV frei waehlbar.",
             )
         )
-        config["skill_ratings"] = select_magic_skills(row)
+        slot += 1
+        _render_tradition_control(
+            config,
+            f"generator_tradition_{name}",
+            container=fields[slot],
+        )
         config["spells"] = select_spells(frames.get("Zauber"), f"{archetype}|{name}")
         config["spell_force"] = config["magic"]
 
     return config
-
-
-def select_magic_skills(row: pd.Series) -> dict[str, int]:
-    """Magische Fertigkeiten frei einstellbar - die CSV fuehrt hier nur Nullen."""
-    ratings: dict[str, int] = {}
-    columns = st.columns(len(engine.MAGIC_SKILLS))
-
-    for column, skill in zip(columns, engine.MAGIC_SKILLS):
-        preset = engine.to_int(row.get(skill)) or engine.DEFAULT_MAGIC_SKILL
-        ratings[skill] = int(
-            column.slider(
-                MAGIC_SKILL_LABELS.get(skill, skill),
-                1,
-                engine.MAX_FORCE,
-                max(1, min(engine.MAX_FORCE, preset)),
-            )
-        )
-
-    return ratings
 
 
 def select_spells(spell_db: pd.DataFrame | None, selection_key: str) -> list[str]:
@@ -1026,6 +1094,27 @@ def preview_selected_armor(
     if armor_key is None:
         return None
     return engine.load_armor(armor_db, armor_key)
+
+
+def _ensure_choice(key: str, options: list[str]) -> None:
+    """Haelt einen Selectbox-Wert in der aktuellen Optionsliste."""
+    if not options:
+        return
+    if st.session_state.get(key) not in options:
+        st.session_state[key] = options[0]
+
+
+def template_display_name(name: str) -> str:
+    """CSV-Unterstriche nur in der Anzeige durch Leerzeichen ersetzen."""
+    return str(name).replace("_", " ")
+
+
+def default_npc_label(config: dict) -> str:
+    pretty = template_display_name(config["name"])
+    metatype = config.get("metatype")
+    if metatype:
+        return f"{pretty} ({metatype})"
+    return pretty
 
 
 def _seed_widget(key: str, value: object) -> None:
@@ -1138,6 +1227,84 @@ def render_attribute_editor(
         initiative_base=config["initiative"],
         initiative_dice=dice,
     )
+
+
+def _baseline_trained_skills(npc: engine.BaseNPC) -> dict[str, int]:
+    """Fertigkeiten mit Stufe > 0, in der Reihenfolge der CSV-Spalten."""
+    skills = getattr(npc, "skills", None)
+    if not skills:
+        return {}
+    return {
+        name: int(value)
+        for name, value in skills.items()
+        if int(value) > 0
+    }
+
+
+def render_skill_editor(
+    npc: engine.MundaneNPC,
+    config: dict,
+    state_key: str,
+    frames: dict[str, pd.DataFrame] | None = None,
+) -> None:
+    """Fertigkeiten > 0 wie Attribute: Ueberschrift und einzelne Zahlenfelder."""
+    st.markdown("**Fertigkeiten** - mit den Pfeilen anpassen")
+
+    baseline_npc = instantiate_npc(config, frames or {}) if frames else None
+    source = baseline_npc if isinstance(baseline_npc, engine.MundaneNPC) else npc
+    natural = _baseline_trained_skills(source)
+    items = list(natural.items())
+    if not items:
+        st.caption("Keine Fertigkeiten mit Stufe > 0.")
+        config["skill_ratings"] = {}
+        return
+
+    values: dict[str, int] = {}
+    for start in range(0, len(items), 4):
+        columns = st.columns(4)
+        for column, (label, preset) in zip(columns, items[start : start + 4]):
+            skill_key = f"skill_{state_key}_{label}"
+            _seed_widget(skill_key, int(preset))
+            values[label] = int(
+                column.number_input(
+                    label,
+                    min_value=0,
+                    max_value=engine.MAX_FORCE,
+                    step=1,
+                    key=skill_key,
+                )
+            )
+
+    config["skill_ratings"] = {
+        label: value
+        for label, value in values.items()
+        if value != natural[label]
+    }
+    engine.apply_overrides(npc, skills=values)
+
+
+def _render_tradition_control(
+    config: dict,
+    widget_key: str,
+    npc: engine.MagicianNPC | None = None,
+    container=None,
+) -> None:
+    target = container if container is not None else st
+    control_kwargs: dict = {
+        "options": engine.TRADITIONS,
+        "key": widget_key,
+        "help": "Hermetiker: WIL + LOG. Schamane: WIL + CHA.",
+    }
+    if widget_key not in st.session_state:
+        control_kwargs["default"] = (
+            config.get("tradition") or engine.TRADITION_HERMETIC
+        )
+    tradition = target.segmented_control("Tradition", **control_kwargs)
+    if tradition not in engine.DRAIN_ATTRIBUTE:
+        tradition = engine.TRADITION_HERMETIC
+    config["tradition"] = tradition
+    if npc is not None:
+        npc.tradition = tradition
 
 
 def render_equipment(
@@ -1293,6 +1460,24 @@ def render_details(
         npc.tradition = tradition
 
 
+def resolve_power_lookup(power_db: pd.DataFrame, power: str) -> object | None:
+    """Vollstaendiger Kraftname zuerst, sonst der Teil vor der Klammer."""
+    text = str(power).strip()
+    if not text:
+        return None
+    try:
+        return engine.resolve_row_name(power_db, text)
+    except KeyError:
+        pass
+    short = text.split(" (")[0].strip()
+    if short and short != text:
+        try:
+            return engine.resolve_row_name(power_db, short)
+        except KeyError:
+            return None
+    return None
+
+
 def render_spirit_powers(
     npc: engine.Spirit, power_db: pd.DataFrame | None, key: str
 ) -> None:
@@ -1305,13 +1490,16 @@ def render_spirit_powers(
     choices = [
         power
         for power in npc.powers + npc.optional_powers
-        if power.split(" (")[0] in power_db.index
+        if resolve_power_lookup(power_db, power) is not None
     ]
     if not choices:
         return
 
     selected = st.selectbox("Kraft nachschlagen", choices, key=f"power_{key}")
-    entry = engine.get_row(power_db, selected.split(" (")[0])
+    matched = resolve_power_lookup(power_db, selected)
+    if matched is None:
+        return
+    entry = engine.get_row(power_db, matched)
     st.caption(
         f"Art: {engine.to_text(entry.get('ART'), '-')} | "
         f"Handlung: {engine.to_text(entry.get('HANDLUNG'), '-')} | "
@@ -1338,7 +1526,11 @@ def render_generator(
         return
 
     header, button = st.columns([4, 1])
-    header.subheader(f"{npc.name}  \u00b7  {archetype_label(npc.ARCHETYPE)}")
+    header.subheader(
+        f"{template_display_name(npc.name)}"
+        + (f"  \u00b7  {config['metatype']}" if config.get("metatype") else "")
+        + f"  \u00b7  {archetype_label(npc.ARCHETYPE)}"
+    )
     # Der Klick wird erst am Ende ausgewertet, wenn Attribute und Ausruestung
     # in der Konfiguration stehen.
     add_clicked = button.button(
@@ -1349,13 +1541,16 @@ def render_generator(
     # einen anderen Namen oder eine andere Kraftstufe, starten sie wieder
     # bei den Werten aus der Datenbank.
     state_key = (
-        f"{config['archetype']}|{config['name']}|"
+        f"{config['archetype']}|{config.get('metatype')}|{config['name']}|"
         f"{config.get('force')}|{config.get('magic')}|{config.get('uses_force')}"
     )
 
     render_attribute_editor(npc, config, state_key, frames)
     st.divider()
-    render_details(npc, config, state_key)
+    if isinstance(npc, engine.MundaneNPC):
+        render_skill_editor(npc, config, state_key, frames)
+    else:
+        render_details(npc, config, state_key)
     st.divider()
     render_equipment(npc, config, frames, skill_map, state_key)
 
@@ -1376,11 +1571,6 @@ def render_generator(
             config["spell_force"] = force
             render_spell_tooltip_list(frames["Zauber"], npc.spells, force=force)
             st.caption("Entzugswert ist immer mindestens 2. Maus ueber Zauber fuer Wirkung.")
-
-    if isinstance(npc, engine.MundaneNPC):
-        with st.expander("Fertigkeiten"):
-            only_trained = st.checkbox("Nur Fertigkeiten mit Stufe > 0", value=True)
-            st.dataframe(npc.skill_table(only_trained), width="stretch", hide_index=True)
 
     st.divider()
     st.markdown("**Wuerfelpools**")
@@ -1434,6 +1624,7 @@ def config_to_export(entry: dict) -> dict:
         "uid": copied.get("uid") or "",
         "archetype": copied["archetype"],
         "name": copied["name"],
+        "metatype": copied.get("metatype"),
         "label": copied.get("label", copied["name"]),
         "force": int(copied.get("force", 4)),
         "uses_force": bool(copied.get("uses_force")),
@@ -1560,7 +1751,9 @@ def import_npc(raw: object) -> dict:
     if not isinstance(ratings_raw, dict):
         ratings_raw = {}
     skill_ratings = {
-        _clip_text(skill): _bounded_int(rating, 0, 0, engine.MAX_FORCE)
+        engine.normalize_skill_name(_clip_text(skill)): _bounded_int(
+            rating, 0, 0, engine.MAX_FORCE
+        )
         for skill, rating in list(ratings_raw.items())[:MAX_IMPORT_SKILLS]
         if _clip_text(skill)
     }
@@ -1568,16 +1761,22 @@ def import_npc(raw: object) -> dict:
     if not isinstance(attributes_raw, dict):
         attributes_raw = {}
     attributes = {
-        key: _bounded_int(attributes_raw.get(key), 0, 0, 15)
+        key: _bounded_int(attributes_raw.get(key), 0, 0, 30)
         for key in engine.ATTRIBUTES
         if key in attributes_raw
     }
     uid = _clip_text(raw.get("uid"), limit=16) or uuid.uuid4().hex[:8]
     armor = raw.get("armor")
+    metatype = _clip_text(raw.get("metatype"))
+    if engine.uses_metatype(archetype):
+        metatype = metatype or engine.DEFAULT_METATYPE
+    else:
+        metatype = None
     return {
         "uid": uid,
         "archetype": archetype,
         "name": name,
+        "metatype": metatype,
         "label": _clip_text(raw.get("label") or name),
         "force": _bounded_int(raw.get("force", 4), 4, 1, engine.MAX_FORCE),
         "uses_force": bool(raw.get("uses_force", False)),
@@ -1843,9 +2042,9 @@ def render_persistence_panel(active: list[dict]) -> None:
 def add_to_dashboard(config: dict) -> None:
     entry = copy_config(config)
     entry["uid"] = uuid.uuid4().hex[:8]
-    entry["label"] = config["name"]
+    entry["label"] = default_npc_label(config)
     st.session_state["active_npcs"].append(entry)
-    st.toast(f"{config['name']} steht jetzt im Dashboard.")
+    st.toast(f"{entry['label']} steht jetzt im Dashboard.")
     # Das Dashboard wird vor dem Generator gezeichnet, daher neu durchlaufen.
     st.rerun()
 
@@ -1941,6 +2140,8 @@ def render_card(
             render_rename_control(config, display_name)
 
         caption = archetype_label(config.get("archetype", npc.ARCHETYPE))
+        if config.get("metatype"):
+            caption = f"{config['metatype']} \u00b7 {caption}"
         if isinstance(npc, engine.MagicianNPC):
             caption += f" \u00b7 {npc.tradition}"
         st.caption(caption)
@@ -1959,6 +2160,7 @@ def render_card(
             )
         )
         st.write(format_limits_line(npc))
+        render_dashboard_edge(npc, config, frames)
 
         wounds = render_damage_monitor(npc, config)
         mod_key = f"mod_{uid}"
@@ -2453,13 +2655,9 @@ def render_npc_calculations(
     if isinstance(npc, engine.Critter):
         notes.append(pools.CRITTER_SKILL_NOTE)
     if isinstance(npc, engine.MagicianNPC):
-        notes.append(
-            f"Astralkampf = {pools.ASTRAL_COMBAT_SKILL_SOURCE} "
-            f"(keine eigene Fertigkeit in der CSV)"
-        )
         notes.append(f"Entzug ({npc.tradition}): WIL + {npc.drain_attribute}")
         notes.append("Spruchzauberei: Limit = Kraftstufe des Zaubers (KS)")
-        notes.append("Herbeirufen: Limit = Kraftstufe des herbeigerufenen Geistes (KS)")
+        notes.append("Beschw\u00f6ren: Limit = Kraftstufe des herbeigerufenen Geistes (KS)")
     if isinstance(npc, engine.Spirit):
         notes.append(
             f"Waffenloser Schaden: STR {npc.attributes[engine.STAERKE]} + "
