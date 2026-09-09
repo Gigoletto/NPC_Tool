@@ -8,26 +8,26 @@ Altmayr SPX 2;Schrotflinten;4;10K;-1;EM/HM;-;8(m);SotA ADL;Tarnmod.+2, RW: schwe
 Aquadyne Shark-XS Harpun.;Projektilwaffen (Armbrüste, Harpunengewehre);5;9K;-2;EM;;5(m);Kreuzfeuer;RW: l. Armbrust unter Wasser, s.Pistole über Wasser
 Arctic Warfare Mod. 64;Scharfschützengewehre;7;14K;-6;EM;-2;5(s);Gruppe;Zweibein, Zielfernroht, zerlegbar
 Ares „Eins“ Monoschwert;Klingenwaffen;5;(Str+3)K;-3;1;;;Kreuzfeuer;
-Ares Aktentaschenschild;Nahkampf, Sonstige;3;(Str+2)K;-;-;;;Tricks&Finesse;Fertigkeit: exot. Nkw, Tarnmod.-4, Regeln: S. 138
+Ares Aktentaschenschild;Exotische Nahkampfwaffe;3;(Str+2)K;-;-;;;Tricks&Finesse;Fertigkeit: exot. Nkw, Tarnmod.-4, Regeln: S. 138
 Ares Alpha;Sturmgewehre;5(7);11K;-2;HM/SM/AM;2;42(s);Regelwerk;int. Rückstoßkomp.-2, SM
 Ares Alpha - Granatwerfer;Sturmgewehre;4(6);Granate;Granate;EM;-;6(s);-;
 Ares Antioch-2;Granat-/Torpedowerfer;4 (6);Granate;Granate;EM;-;8(m);Regelwerk;SM
-Ares Archon schwerer Laser;Laserwaffen (Exot. Fernkampf, KF S.47);7;10K;-10;HM;-;externe Quelle;Kreuzfeuer;1 Schuß = 4 Energieeinheiten, RW: Scharfschützeng.
-Ares Armatus;Laserwaffen (Exot. Fernkampf, KF S.47);6;6K;-5;HM;-;10(s) o. Ext.;Harte Ziele;1 Schuß = 1 Energieeinheit, RW und Streuung wie Schrotflinten
+Ares Archon schwerer Laser;Exotische Fernkampfwaffe;7;10K;-10;HM;-;externe Quelle;Kreuzfeuer;1 Schuß = 4 Energieeinheiten, RW: Scharfschützeng.
+Ares Armatus;Exotische Fernkampfwaffe;6;6K;-5;HM;-;10(s) o. Ext.;Harte Ziele;1 Schuß = 1 Energieeinheit, RW und Streuung wie Schrotflinten
 Ares Crusader II;Automatikpistolen;5 (7);7K;-;HM/SM;2;40(s);Regelwerk;Gasventil-2, SM
 Ares Desert Strike;Scharfschützengewehre;7;13K;-4;HM;1;14(s);Regelwerk;Schockploster,, Zielfernrohr (Vergr.)
 Ares Executer;Maschinenpistole;4;7K;-;HM/SM/AM;-1;30(s);Kreuzfeuer;auskl. Schulterstütze, int. Schalldämpfer
-Ares Flashield;Nahkampf, Sonstige;4;(Str+2)G;-;-;;;Kreuzfeuer;Fertigkeit: exot. Nkw,  int. Flashpack,  Regeln: S. 72
+Ares Flashield;Exotische Nahkampfwaffe;4;(Str+2)G;-;-;;;Kreuzfeuer;Fertigkeit: exot. Nkw,  int. Flashpack,  Regeln: S. 72
 Ares Giantslayer Zwille;Projektilwaffen (Bögen, Zwillen);7;2K;-;EM;;;Kreuzfeuer;Fertigkeit: Projektilwaffen, RW: Shuriken, Regeln: S. 23
 Ares HVAR;Sturmgewehre;5 (7);8K;-;HM/SM/AM;3 (4);50(s);Kreuzfeuer;Schockpolster, int. Rückstoßk..-3, SM,  Regeln: S. 37
-Ares Lancer MP-Laser;Laserwaffen (Exot. Fernkamof, KF S.47);7;7K;-10;HM;-;2 x 10(s) o. Ext.;Kreuzfeuer;1 Schuß = 2 Energieeinheiten, RW: Sturmgewehre
+Ares Lancer MP-Laser;Exotische Fernkampfwaffe;7;7K;-10;HM;-;2 x 10(s) o. Ext.;Kreuzfeuer;1 Schuß = 2 Energieeinheiten, RW: Sturmgewehre
 Ares Light Fire 70;Leichte Pistolen;7;6K;-;HM;-;16(s);Regelwerk;Schalldämpfer (Würfelmod. -5), kostet 750,-
 Ares Light Fire 75;Leichte Pistolen;6 (8);6K;-;HM;-;16(s);Regelwerk;int. Schalldämpfer (Würfelmod.-5), SM
-Ares Monofilament-Garotte;Nahkampf, Sonstige;5;(Str+6)K;-8;-;;;Kreuzfeuer;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S.20
+Ares Monofilament-Garotte;Exotische Nahkampfwaffe;5;(Str+6)K;-8;-;;;Kreuzfeuer;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S.20
 Ares Predator V;Schwere Pistolen;5 (7);8K;-1;HM;-;15(s);Regelwerk;SM
-Ares Redline Laserpistole;Laserwaffen (Exot. Fernkamof, KF S.47);9;5K;-10;HM;-;10(s) o. Ext.;Kreuzfeuer;1 Schuß = 1 Energieeinheit, RW: MP
-Ares S-III Super Squirt;Spezielle Waffen;3;Toxin;Toxin;HM;-;20(s);Regelwerk;Fertigkeit: Pistole,  RW: leichte Pistole
-Ares Screech Schallgewehr;Spezielle Waffen;6;7G;speziell;EM;-;10(s);Kreuzfeuer;Fertigkeit: exot. Fernkampfwaffe,  Regeln: S. 26
+Ares Redline Laserpistole;Exotische Fernkampfwaffe;9;5K;-10;HM;-;10(s) o. Ext.;Kreuzfeuer;1 Schuß = 1 Energieeinheit, RW: MP
+Ares S-III Super Squirt;Pistole;3;Toxin;Toxin;HM;-;20(s);Regelwerk;Fertigkeit: Pistole,  RW: leichte Pistole
+Ares Screech Schallgewehr;Exotische Fernkampfwaffe;6;7G;speziell;EM;-;10(s);Kreuzfeuer;Fertigkeit: exot. Fernkampfwaffe,  Regeln: S. 26
 Ares Sigma;Maschinenpistole;4 (6);8K;-;HM/SM/AM;-2;50(t);Schattenhb. 1;ausz. Schulterstütze, Vordergriff, SM, 2 Montagesch.
 Ares Stalwart;Sturmgewehre (Karabiner, RW MP, Tarn +4);5;9K;-2;HM/SM/AM;-1;36(s);tödl. Schatten;auskl. Schulterstütze
 Ares Striker;Schwere Pistolen;5;8K;-1;HM;-;12(s);tödl. Schatten;ohne WiFi-Fähigkeit
@@ -35,46 +35,46 @@ Ares Thunderstruck Gaussg.;Sturmkanonen;7 (8);15K;-8;HM;1;10(s) + Energie;Kreuzf
 Ares Vigorous;Sturmkanonen;4;16K;-6;EM;-;12(s);Kreuzfeuer;
 Ares Viper Slivergun;Schwere Pistolen;4;9K(f);4;HM/SM;-;30(s);Regelwerk;int. Schalldämpfer
 ArmTech MGL-12;Granat-/Torpedowerfer;4;Granate;Granate;HM;-;12(s);Regelwerk;
-Ash Arms Kampfkettensäge;Nahkampf, Sonstige;5;8K;-4;1;;;Kreuzfeuer;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S. 21
-Ash Monofilament-Kettensäge;Nahkampf, Sonstige;5;12K;-8;1;;;Kreuzfeuer;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S. 21
+Ash Arms Kampfkettensäge;Exotische Nahkampfwaffe;5;8K;-4;1;;;Kreuzfeuer;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S. 21
+Ash Monofilament-Kettensäge;Exotische Nahkampfwaffe;5;12K;-8;1;;;Kreuzfeuer;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S. 21
 Auto Assault 16;Schrotflinten;4;13K;-1;HM/SM/AM;2;10(s) o. 32(t);Kreuzfeuer;int. Rückstoßkomp.-2
 Aztech Bluttrinker Kampfaxt;Klingenwaffen;5;(Str+3)K;-3;1;;;tödl. Schatten;Regel: S. 137
 Aztechnology Striker;Raketenwerfer;5;Rakete;Rakete;EM;-;1(v);Regelwerk;
-ballistischer Schild;Nahkampf, Sonstige;4;(Str+2)G;-;-;;;Regelwerk;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S. 441
+ballistischer Schild;Exotische Nahkampfwaffe;4;(Str+2)G;-;-;;;Regelwerk;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S. 441
 Barrens Special;Schwere Pistolen;4;8K;-1;EM;-;5(tr);tödl. Schatten;Unterlaufbajonett
-Barrens Special Bajonett;Nahkampf, Sonstige;4;(Str+1)K;-1;-;;;tödl. Schatten;Fertigkeit: Klingenwaffen,  Regeln. S. 29
+Barrens Special Bajonett;Klingenwaffen;4;(Str+1)K;-1;-;;;tödl. Schatten;Fertigkeit: Klingenwaffen,  Regeln. S. 29
 Barret Modell 122;Scharfschützengewehre;7 (9);14K;-6;HM;-2;14(s);Kreuzfeuer;Zweibein, SM, Schalldämpfer
-Bates-Brown takt. Kampfstiefel;Nahkampf, Sonstige;4;(Str+2)K;-4;-;;;tödl. Schatten;Fertigkeit: waffenloser Kampf, DK nur gegen Barrieren, Panzerung+5 auf Füße, Regeln: S. 138
+Bates-Brown takt. Kampfstiefel;Waffenloser Kampf;4;(Str+2)K;-4;-;;;tödl. Schatten;Fertigkeit: waffenloser Kampf, DK nur gegen Barrieren, Panzerung+5 auf Füße, Regeln: S. 138
 Beretta 201T;Leichte Pistolen;6;6K;-;HM/SM;-1;21(s);Regelwerk;abn. Schulterstütze
 Beretta Mod. 59;Scharfschützengewehre;5 (6);10K;-2;HM;-1;10(s);Gruppe;hologr.Visier, auskl. Schulterstütze, verkürzter Lauf, Schalldämpfer
 Beretta Northstar;Schrotflinten;4 (6);11K;-1;HM;-;2 x 6(m);tödl. Schatten;SM, zusätzl. Internes Magazin
 Betäubungsschlagstock;Knüppel;4;9G(e);-5;1;;;Regelwerk;
 Billardqueue;Knüppel;4;(Str)K;1;-;;;Kreuzfeuer;
-Bioimpl.- chem.Spuckdrüse;Spezielle Waffen;körp.;Toxin;Toxin;EM;-;Mind. 4;Bodyshop;Fertigkeit: exot. Fkw,  RW: 5 Meter, Regeln: S. 115
-Bioimpl.-chem. Ausatmungsdr.;Spezielle Waffen;körp.;Toxin;Toxin;EM;-;Mind. 4;Bodyshop;Fertigkeit: exot. Fkw,  RW: 2 Meter, Regeln: S. 115
-Bioimplantat-Biosporn;Nahkampf, Sonstige;körp.;(Str+2)K;-;-;;;Harte Ziele;Fertigkeit: waffenl.Kampf,  einziehbar,  Regeln: S. 178
-Bioimplantat-elektr. Entladung;Nahkampf, Sonstige;körp.;1-8G(e);-4;-;;;Bodyshop;Fertigkeit: waffenloser Kampf,  Regeln: S. 123
-Bioimplantat-Hauer  mittel;Nahkampf, Sonstige;4;(Str)K;-1;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, Regeln: S. 123
-Bioimplantat-Hauer groß;Nahkampf, Sonstige;4;(Str+1)K;-2;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, Regeln: S. 123
-Bioimplantat-Hörner;Nahkampf, Sonstige;4;(Str+1)K;-2;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, Regeln: S. 123
-Bioimplantat-Kampfhornhaut;Nahkampf, Sonstige;körp.;(Str)K;-;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, Regeln: S. 124
-Bioimplantat-Klauen;Nahkampf, Sonstige;körp.;(Str+1)K;-3;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, Regeln: S. 124
-Bioimplantat-Klauen einziehb.;Nahkampf, Sonstige;körp.;(Str+1)K;-3;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, einziehbar, Regeln: S. 124
-Bioimplantat-Knochenverstärk.;Nahkampf, Sonstige;körp.;(Str+St-1)K;-;-;;;Regelwerk;Fertigkeit: waffenl. Kampf, Regeln: S. 464
-Bioimplantat-Reißzahn;Nahkampf, Sonstige;3;(Str+2)K;-4;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, Regeln: S. 124
-Bioimplantat-Reißzahn einzie.;Nahkampf, Sonstige;3;(Str+2)K;-4;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, einziehbar, Regeln: S. 124
-Bioimplantat-Sprüher;Spezielle Waffen;körp.;Toxin;Toxin;EM;-;Mind. 4;Bodyshop;Fertigkeit: exot. Fkw,  RW: 5 Meter, Regeln: S. 125
-Bioimplantat-Stachel groß;Nahkampf, Sonstige;körp.;(Str+3)K / Toxin;#NAME?;1;;;Bodyshop;Fertigkeit: waffenl. Kampf, Regeln: S. 125
-Bioimplantat-Stachel mittel;Nahkampf, Sonstige;körp.;(Str+2)K / Toxin;#NAME?;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, Regeln: S. 125
-Bioimplantat-Stachel winzig;Nahkampf, Sonstige;körp.;Toxin;Toxin;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, Regeln: S. 125
-Blasrohr;Spezielle Waffen;8;1K / Toxin;- / Toxin;EM;-;1(v);Kreuzfeuer;Fertigkeit: exot. Fkw,  RW: Taser, Regeln: S. 26
+Bioimpl.- chem.Spuckdrüse;Exotische Fernkampfwaffe;körp.;Toxin;Toxin;EM;-;Mind. 4;Bodyshop;Fertigkeit: exot. Fkw,  RW: 5 Meter, Regeln: S. 115
+Bioimpl.-chem. Ausatmungsdr.;Exotische Fernkampfwaffe;körp.;Toxin;Toxin;EM;-;Mind. 4;Bodyshop;Fertigkeit: exot. Fkw,  RW: 2 Meter, Regeln: S. 115
+Bioimplantat-Biosporn;Waffenloser Kampf;körp.;(Str+2)K;-;-;;;Harte Ziele;Fertigkeit: waffenl.Kampf,  einziehbar,  Regeln: S. 178
+Bioimplantat-elektr. Entladung;Waffenloser Kampf;körp.;1-8G(e);-4;-;;;Bodyshop;Fertigkeit: waffenloser Kampf,  Regeln: S. 123
+Bioimplantat-Hauer  mittel;Waffenloser Kampf;4;(Str)K;-1;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, Regeln: S. 123
+Bioimplantat-Hauer groß;Waffenloser Kampf;4;(Str+1)K;-2;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, Regeln: S. 123
+Bioimplantat-Hörner;Waffenloser Kampf;4;(Str+1)K;-2;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, Regeln: S. 123
+Bioimplantat-Kampfhornhaut;Waffenloser Kampf;körp.;(Str)K;-;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, Regeln: S. 124
+Bioimplantat-Klauen;Waffenloser Kampf;körp.;(Str+1)K;-3;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, Regeln: S. 124
+Bioimplantat-Klauen einziehb.;Waffenloser Kampf;körp.;(Str+1)K;-3;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, einziehbar, Regeln: S. 124
+Bioimplantat-Knochenverstärk.;Waffenloser Kampf;körp.;(Str+St-1)K;-;-;;;Regelwerk;Fertigkeit: waffenl. Kampf, Regeln: S. 464
+Bioimplantat-Reißzahn;Waffenloser Kampf;3;(Str+2)K;-4;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, Regeln: S. 124
+Bioimplantat-Reißzahn einzie.;Waffenloser Kampf;3;(Str+2)K;-4;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, einziehbar, Regeln: S. 124
+Bioimplantat-Sprüher;Exotische Fernkampfwaffe;körp.;Toxin;Toxin;EM;-;Mind. 4;Bodyshop;Fertigkeit: exot. Fkw,  RW: 5 Meter, Regeln: S. 125
+Bioimplantat-Stachel groß;Waffenloser Kampf;körp.;(Str+3)K / Toxin;#NAME?;1;;;Bodyshop;Fertigkeit: waffenl. Kampf, Regeln: S. 125
+Bioimplantat-Stachel mittel;Waffenloser Kampf;körp.;(Str+2)K / Toxin;#NAME?;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, Regeln: S. 125
+Bioimplantat-Stachel winzig;Waffenloser Kampf;körp.;Toxin;Toxin;-;;;Bodyshop;Fertigkeit: waffenl. Kampf, Regeln: S. 125
+Blasrohr;Exotische Fernkampfwaffe;8;1K / Toxin;- / Toxin;EM;-;1(v);Kreuzfeuer;Fertigkeit: exot. Fkw,  RW: Taser, Regeln: S. 26
 Bogen;Projektilwaffen (Bögen, Zwillen);6;(Stufe+2)K;-(St.:4);;;;Regelwerk;
 Bola;Wurfwaffen;körp.;(Str+3)G;4;;;;Kreuzfeuer;Fertigkeit: exot. Fkw,  RW: Shuriken,  Regeln: S. 27
 Bratpfanne;Knüppel;3;(Str+1)K;-;-;;;Kreuzfeuer;
 Browning Ghost;Leichte Pistolen;5 (7);6K;-;HM;1;10(s);tödl. Schatten;SM, angepasster Griff, elektr. Feuern, Keine weiteren Modifikationen, Regeln: S. 27
 Browning Phantom;Schwere Pistolen;4 (6);8K;-1;HM;1;12(s);tödl. Schatten;SM, angepasster Griff, elektr. Feuern, keine weiteren Modifikationen, Regeln: S. 30
 Browning Ultra Power;Schwere Pistolen;5 (6);8K;-1;HM;-;10(s);Regelwerk;LM
-Bullenpeitsche;Nahkampf, Sonstige;6;(Str+1)K;3;2;;;Kreuzfeuer;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S. 21
+Bullenpeitsche;Exotische Nahkampfwaffe;6;(Str+1)K;3;2;;;Kreuzfeuer;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S. 21
 Bumerang;Wurfwaffen;Körp.-1;(Str+2)K;-;;;;Kreuzfeuer;RW: aerody. Granaten,  Regeln: S. 25
 Cavalier Arms Adder Slivergun;Leichte Pistolen;5;8K(f);5;HM;-;20(s);Harte Ziele;
 Cavalier Arms Crockett EBR;Scharfschützengewehre;6 (7);12K;-3;HM/SM;1;20(s);Regelwerk;Schockploster,, Zielfernrohr (Vergr.)
@@ -103,41 +103,41 @@ Cougar Fineblade lang;Klingenwaffen;7;(Str+3)K;-1;-;;;Kreuzfeuer;
 Cougar Telekopspeer;Wurfwaffen;5;(Str+3)K;-2;;;;Harte Ziele;RW: standard Granaten
 Cougar Telekopspeer (ausgefahren);Klingenwaffen;5;(Str+3)K;-2;3;;;Harte Ziele;
 Cougar Telekopspeer (zusammengeschoben);Klingenwaffen;5;(Str+1)K;-1;-;;;Harte Ziele;
-Cyberimpl.-Flammensprüher;Flammenwerfer (Exot. Fernkampf);4;6K;-6;HM/SM;-;5(m);Bodyshop;RW: Taser,  KF S. 49
+Cyberimpl.-Flammensprüher;Exotische Fernkampfwaffe;4;6K;-6;HM/SM;-;5(m);Bodyshop;RW: Taser,  KF S. 49
 Cyberimplantat-Automatikpist.;Automatikpistolen;4 (6);6K;-;HM/SM;1;18(m) o. 32(s);Regelwerk;int. Rückstoßkomp.-1, SM, nichtmet.,  Regeln: S. 463
-Cyberimplantat-Fingerinjektor;Nahkampf, Sonstige;körp.;Toxin;Toxin;-;;;Harte Ziele;Fertigkeit: waffenl.Kampf,  einziehbar,  Regeln: S. 178
+Cyberimplantat-Fingerinjektor;Waffenloser Kampf;körp.;Toxin;Toxin;-;;;Harte Ziele;Fertigkeit: waffenl.Kampf,  einziehbar,  Regeln: S. 178
 Cyberimplantat-Fingerpistole;Holdout-Pistolen;3 (5);6K;-;HM;-;1(v);Bodyshop;SM, nichtmetallisch,  Regeln: Regelwerk S. 463
-Cyberimplantat-Fußklinge;Nahkampf, Sonstige;körp.;(Str+2)K;-;-;;;Harte Ziele;Fertigkeit: waffenl.Kampf,  einziehbar,  Regeln: S. 463
+Cyberimplantat-Fußklinge;Waffenloser Kampf;körp.;(Str+2)K;-;-;;;Harte Ziele;Fertigkeit: waffenl.Kampf,  einziehbar,  Regeln: S. 463
 Cyberimplantat-Granatwerfer;Granat-/Torpedowerfer;4 (6);Granate;Granate;EM;-;2(m) o. 6(s);Regelwerk;SM, nichtmetallisch,  Regeln: S. 463
-Cyberimplantat-Handklinge;Nahkampf, Sonstige;körp.;(Str+2)K;-2;-;;;Regelwerk;Fertigkeit: waffenl.Kampf,  einziehbar,  Regeln: S. 463
+Cyberimplantat-Handklinge;Waffenloser Kampf;körp.;(Str+2)K;-2;-;;;Regelwerk;Fertigkeit: waffenl.Kampf,  einziehbar,  Regeln: S. 463
 Cyberimplantat-Holdout;Holdout-Pistolen;4 (6);6K;-;HM;-;2m o. 6(s);Regelwerk;SM, nichtmetallisch,  Regeln: S. 463
 Cyberimplantat-leichte Pistole;Leichte Pistolen;6 (8);7K;-;HM;.;10(m) o. 15(s);Regelwerk;SM, nichtmetallisch,  Regeln: S. 463
 Cyberimplantat-MP;Maschinenpistole;4 (6);7K;-;HM/SM;2;18(m) o. 32(s);Regelwerk;int. Rückstoßkomp.-2, SM, nichtmet.,  Regeln: S. 463
-Cyberimplantat-Mundmesser;Nahkampf, Sonstige;körp.;6K;-3;1;;;Bodyshop;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S. 95
-Cyberimplantat-Nagelmesser;Nahkampf, Sonstige;körp.;(Str+1)K;-3;-;;;Regelwerk;Fertigkeit: waffenl.Kampf,  einziehbar,  Regeln: S. 463
-Cyberimplantat-Pfeilpistole;Spezielle Waffen;4;4K / Toxin;- / Toxin;EM;-;1(m);Bodyshop;Fertigkeit: exot. Fkw.,  RW: Taser,  Regeln: S. 95
-Cyberimplantat-Schockhand;Nahkampf, Sonstige;körp.;9G(e);-5;-;;;Regelwerk;Fertigkeit: waffenloser Kampf,  Regeln: S. 463
+Cyberimplantat-Mundmesser;Exotische Nahkampfwaffe;körp.;6K;-3;1;;;Bodyshop;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S. 95
+Cyberimplantat-Nagelmesser;Waffenloser Kampf;körp.;(Str+1)K;-3;-;;;Regelwerk;Fertigkeit: waffenl.Kampf,  einziehbar,  Regeln: S. 463
+Cyberimplantat-Pfeilpistole;Exotische Fernkampfwaffe;4;4K / Toxin;- / Toxin;EM;-;1(m);Bodyshop;Fertigkeit: exot. Fkw.,  RW: Taser,  Regeln: S. 95
+Cyberimplantat-Schockhand;Waffenloser Kampf;körp.;9G(e);-5;-;;;Regelwerk;Fertigkeit: waffenloser Kampf,  Regeln: S. 463
 Cyberimplantat-Schrotflinte;Schrotflinten;4 (6);10K;-1;EM;-;4(m) o. 10(s);Regelwerk;SM, nichtmetallisch,  Regeln: S. 463
 Cyberimplantat-schw. Pistole;Schwere Pistolen;4 (6);7K;-1;HM;-;8(m) o. 12(s);Regelwerk;SM, nichtmetallisch,  Regeln: S. 463
-Cyberimplantat-Sporn;Nahkampf, Sonstige;körp.;(Str+3)K;-2;-;;;Regelwerk;Fertigkeit: waffenl.Kampf,  einziehbar,  Regeln: S. 463
+Cyberimplantat-Sporn;Waffenloser Kampf;körp.;(Str+3)K;-2;-;;;Regelwerk;Fertigkeit: waffenl.Kampf,  einziehbar,  Regeln: S. 463
 Defiance EX-Shocker (fern);Taser;4;9G(e);-5;EM;-;4(m);Regelwerk;
-Defiance EX-Shocker (nah);Nahkampf, Sonstige;3;8G(e);-5;-;;;Regelwerk;Fertigkeit: Knüppel Eigentlich Taser (s.u.), 4 Ladungen im Nahkampf?
+Defiance EX-Shocker (nah);Knüppel;3;8G(e);-5;-;;;Regelwerk;Fertigkeit: Knüppel Eigentlich Taser (s.u.), 4 Ladungen im Nahkampf?
 Defiance T 250 Kurzlauf;Schrotflinten;4;9K;-1;EM/HM;-;5(m);Regelwerk;Tarnmod.+4, RW: schwere Pistole, kurze Salve mögl.
 Defiance T-250;Schrotflinten;4;10K;-1;EM/HM;-;5(m);Regelwerk;Tarnmod.+4, RW: schwere Pistole
 Dynamisch. Compoundbogen;Projektilwaffen (Bögen, Zwillen);5;(Stufe+2)K;-(St.:4);;;;Harte Ziele;Stufe 1 bis 10 mit einfacher Handlung festlegen
 Enfield AS-7;Schrotflinten;4 (5);13K;-1;HM/SM;-;10(s) o. 24(t);Regelwerk;LM
 Enterhakenkanone;Projektilwaffen (Armbrüste, Harpunengewehre);3;7G;-2;EM;;1(v);Regelwerk;RW: l. Armbrust,  Regeln: S. 454
 Esprit Tsunami;Maschinenpistole;4 (6);7K;-;SM/AM;-;40(s);tödl. Schatten;SM, Freund-/Feind-Erkennungssystem (Basis)
-extreme Cyberimplantatwaffe;Nahkampf, Sonstige;Körp.-1;(Str+5)K;-;1;;;Bodyshop;Fertigkeit: waffenloser Kampf, Regeln: S. 95
+extreme Cyberimplantatwaffe;Waffenloser Kampf;Körp.-1;(Str+5)K;-;1;;;Bodyshop;Fertigkeit: waffenloser Kampf, Regeln: S. 95
 Faltsense;Klingenwaffen;5;(Str+2)K;-2;2;;;Harte Ziele;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S. 176
 Fianchetti Military 100;Automatikpistolen;5 (7);6K;-;HM/SM/AM;-;20(s);Schattenhb. 1;SM
 Fichetti Executive Action;Leichte Pistolen;6;7K;-;HM/SM*;-;18(s);Kreuzfeuer;Salvenmodus = komplexe Handlung
-Fichetti Pain Inducer;Spezielle Waffen;3;speziell;speziell;EM;-;10 Ladungen;Regelwerk;Fertigkeit: Pistole,  RW: MP,  Regeln: S.432
+Fichetti Pain Inducer;Pistole;3;speziell;speziell;EM;-;10 Ladungen;Regelwerk;Fertigkeit: Pistole,  RW: MP,  Regeln: S.432
 Fichetti Security 600;Leichte Pistolen;6 (7);7K;-;HM;-1;30(s);Regelwerk;abn. Schulterstütze, LM
 Fichetti Tiffani Needler;Holdout-Pistolen;5;8K(f);5;HM;-;4(s);Regelwerk;
 Fichetti Tiffani Self-Defender;Holdout-Pistolen;4;6K;-;EM;-;4(s);Kreuzfeuer;
 Fingergranate;Wurfwaffen;körp.;Granate-2;Granate;Granate;;;Bodyshop;Regeln: S. 90
-Flammenarmband;Flammenwerfer (Exot. Fernkampf, KF S. 49);4;6K;-6;EM;-;2(s);Harte Ziele;RW: Taser,  Regeln: S.176
+Flammenarmband;Exotische Fernkampfwaffe;4;6K;-6;EM;-;2(s);Harte Ziele;RW: Taser,  Regeln: S.176
 Flasche (ganz);Knüppel;3;(Str+1)G;-;-;;;Kreuzfeuer;
 Flasche (zerbrochen);Knüppel;3;(Str)K;-;-;;;Kreuzfeuer;
 Flash-Pack;Wurfwaffen;körp.;speziell;-;speziell;;;Regelwerk;Regeln: S. 437
@@ -148,7 +148,7 @@ FN P83 Praetor;Maschinenpistole;6;8K;-;HM/SM/AM;1(2);50(s);Regelwerk;feste Schul
 FN-AAL Gyrojetpistole;Schwere Pistolen;5;10K;-2;HM;-;10(s);Kreuzfeuer;verwendet Miniaturraketen,  Regeln: S. 27
 Franchi SPAS-24;Schrotflinten;4 (6);12K;-1;HM/SM;1;10(s);Kreuzfeuer;Schockpolster, SM
 Gabel;Knüppel;4;(Str-1)K;1;-;;;Kreuzfeuer;
-Garotte;Nahkampf, Sonstige;5;(Str+4)G;-6;-;;;Kreuzfeuer;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S.20
+Garotte;Exotische Nahkampfwaffe;5;(Str+4)G;-6;-;;;Kreuzfeuer;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S.20
 Gasgranate;Wurfwaffen;körp.;Toxin;Toxin;10m Radius;;;Regelwerk;Regeln: S. 437
 GE Vinidicator Minigun – LMG;Leichtes Maschinengewehr;4 (6);9K;-4;AM;2;100/200(gurt);Kreuzfeuer;int. Rückstoßkomp.-2, SM, Regeln: S. 42
 Gewehrkolben;Knüppel;3;(Str+3)K;-;-;;;Kreuzfeuer;
@@ -194,7 +194,7 @@ Horizon-Flynn Rapier;Klingenwaffen;7;(Str+2)K;-3;1;;;Kreuzfeuer;
 Ingram Smartgun;Maschinenpistole;4 (6);8K;-;SM/AM;2(3);32(s);Regelwerk;ausz. Schulterstütze, Gas-2. SM, int. Schalldämpfer
 Ingram Supermach 200;Maschinenpistole;6;5K;-6;SM/AM;2;40(s);tödl. Schatten;SM, Schockpolster, int.Rückstoßkomp.-1, Regeln: S. 140
 Ingram Valiant – LMG;Leichtes Maschinengewehr;5 (6);9K;-2;SM/AM;3;50(s) o. Gurt;Regelwerk;Gasventil-2, Schockpolster, LM
-Injektionsstift;Nahkampf, Sonstige;4;Toxin;-2;-;;;Tricks&Finesse;Fertigkeit: exot. Nahkampfwaffe, Regeln: S. 134
+Injektionsstift;Exotische Nahkampfwaffe;4;Toxin;-2;-;;;Tricks&Finesse;Fertigkeit: exot. Nahkampfwaffe, Regeln: S. 134
 IR-Rauchgranate;Wurfwaffen;körp.;-;-;10m Radius;;;Regelwerk;Regeln: S. 437
 Izom Artemis;Sturmgewehre (Karabiner, RW MP, Tarn +4);5 (6);9K;-2;SM/AM;-;30(s);tödl. Schatten;LM
 Izom Artemis - Granatwerfer;Sturmgewehre (Karabiner, RW MP, Tarn +4);3 (4);Granate;Granate;EM;-;1(m);-;
@@ -204,19 +204,19 @@ Kampfmesser;Klingenwaffen;6;(Str+2)K;-3;-;;;Regelwerk;
 Katana;Klingenwaffen;7;(Str+3)K;-3;1;;;Regelwerk;
 Katana der Roten Samurai;Klingenwaffen;6;(Str+3)K;-4;1;;;tödl. Schatten;Regeln: S. 139
 Keramik- /Plaststahlmesser;Klingenwaffen;5;(Str+1)K;-1;-;;;Harte Ziele;nichtmetallisch
-Kette;Nahkampf, Sonstige;4;(Str+1)K;-;2;;;Kreuzfeuer;Fertigkeit: exot. Nahkampfwaffe
+Kette;Exotische Nahkampfwaffe;4;(Str+1)K;-;2;;;Kreuzfeuer;Fertigkeit: exot. Nahkampfwaffe
 Knüppel;Knüppel;4;(Str+3)K;-;1;;;Regelwerk;
 Knüppel-Basecap;Knüppel;4;(Str+2)K;-;-;;;Tricks&Finesse;Regeln: S. 134
-Kompositknochen Aluminium;Nahkampf, Sonstige;körp.;(Str+2)K;-;-;;;Regelwerk;Fertigkeit: waffenl. Kampf, Regeln: S. 460
-Kompositknochen Kunststoff;Nahkampf, Sonstige;körp.;(Str+1)K;-;-;;;Regelwerk;Fertigkeit: waffenl. Kampf, Regeln: S. 460
-Kompositknochen Titan;Nahkampf, Sonstige;körp.;(Str+3)K;-;-;;;Regelwerk;Fertigkeit: waffenl. Kampf, Regeln: S. 460
-Krime Betäubungslanze;Nahkampf, Sonstige;4;10G(e);-5;2;;;tödl. Schatten;Fertigkeit: exot. Nkw, nur in Trollgröße erhältlich
+Kompositknochen Aluminium;Waffenloser Kampf;körp.;(Str+2)K;-;-;;;Regelwerk;Fertigkeit: waffenl. Kampf, Regeln: S. 460
+Kompositknochen Kunststoff;Waffenloser Kampf;körp.;(Str+1)K;-;-;;;Regelwerk;Fertigkeit: waffenl. Kampf, Regeln: S. 460
+Kompositknochen Titan;Waffenloser Kampf;körp.;(Str+3)K;-;-;;;Regelwerk;Fertigkeit: waffenl. Kampf, Regeln: S. 460
+Krime Betäubungslanze;Exotische Nahkampfwaffe;4;10G(e);-5;2;;;tödl. Schatten;Fertigkeit: exot. Nkw, nur in Trollgröße erhältlich
 Krime Bomb;Sturmkanonen;6 (7);16K;-6;EM;-;4(m);Schattenhb. 1;LM, 2 Montageschienen
 Krime Boom;Schrotflinten;4;10K;-1;AM;-;20(m);tödl. Schatten;nur in Trollgröße
 Krime Boss;Schrotflinten;3;13K;-1;HM;1;15(t);Schattenhb. 1;int. Rückstoßkomp.-1, Metamenschen-Anpassung
 Krime Cannon;Sturmkanonen;4 (5);16K;-6;HM;-;6(m);Regelwerk;Metamenschen-Anpassung
-Krime Handschuhe;Nahkampf, Sonstige;körp.;(Str)K;-;-;;;tödl. Schatten;Fertigkeit: wafflenl.Kampf, Regeln: S. 23
-Krime Handschuhe (Schockh.);Nahkampf, Sonstige;körp.;8G(e);-5;-;;;tödl. Schatten;Fertigkeit: wafflenl.Kampf, Regeln: S. 23
+Krime Handschuhe;Waffenloser Kampf;körp.;(Str)K;-;-;;;tödl. Schatten;Fertigkeit: wafflenl.Kampf, Regeln: S. 23
+Krime Handschuhe (Schockh.);Waffenloser Kampf;körp.;8G(e);-5;-;;;tödl. Schatten;Fertigkeit: wafflenl.Kampf, Regeln: S. 23
 Krime Happiness;Sturmgewehre;3;9K;-2;AM;-;100(Gurt);tödl. Schatten;
 Krime Hippe;Klingenwaffen;5;(Str+3)K;-2;1/3*;;;tödl. Schatten;ausfahrbar (RW: 3), Tarnmod.-4 eingefahren
 Krime Reaver Axt;Klingenwaffen;4;(Str+3)K;-1;1;;;tödl. Schatten;nur in Trollgröße, auch als Hacke oder Knüppel Einsetzbar, Regeln: S. 20
@@ -227,7 +227,7 @@ Krime Triple-Dwarf Nano - LMG;Leichtes Maschinengewehr;3 (5);7K;-;AM;-;100 (gurt
 Krime Triple-Ork Microg – LMG;Leichtes Maschinengewehr;3 (5);8K;-2;AM;-;100 (gurt);tödl. Schatten;SM, ang. Griff, nur in Orklgröße, Regeln: S. 42
 Krime Triple-Troll Minig.-LMG;Leichtes Maschinengewehr;3 (5);10K;-4;AM;-;100 (gurt);tödl. Schatten;SM, ang. Griff, nur in Trollgröße, Regeln: S. 42
 Krime Trollbogen;Projektilwaffen (Bögen, Zwillen);4;(Stufe+2)K;-(St:4);;;;tödl. Schatten;Stufe 6 bis 12 (auf Pfeile Stufe 11 und 12 erhältlich)
-Krime Trollbogen (Klingen);Nahkampf, Sonstige;3;(Str+1)K;-1;1;;;tödl. Schatten;Fertigkeit: Klingenwaffen,  Regeln. S. 25
+Krime Trollbogen (Klingen);Klingenwaffen;3;(Str+1)K;-1;1;;;tödl. Schatten;Fertigkeit: Klingenwaffen,  Regeln. S. 25
 Krime Wave – LMG;Leichtes Maschinengewehr;5;10K;-2;AM;-2;50(s) o. Gurt;Schattenhb. 1;Zweibein, Metamenschen-Anpassung
 Krime Whammy;Knüppel;4;(Str+2)K;-;1;;;tödl. Schatten;Regeln: S. 41
 Krime Whammy;Schrotflinten;3;12K;-1;EM;1;5(m);tödl. Schatten;Schockploster, Nahkampfverstärkung, Regeln: S. 41
@@ -249,28 +249,28 @@ Marlin 3468 SS;Sportgewehre;4;13K;-1;EM;-;4(m);Schattenhb. 1;
 Marlin 79 S;Sportgewehre;4;6K;-;HM;-;10(s);Schattenhb. 1;
 Marlin X71;Sportgewehre;5;12K;-4;EM;-;5(m);Schattenhb. 1;Extremumgeb.-1 (arkt.), Zielfern (RV, Verb-2, Vergr.)
 Messer;Klingenwaffen;5;(Str+1)K;-1;-;;;Regelwerk;
-Mini-Signalraketenkanone;Spezielle Waffen;3;5K (Feuer);-5;EM;-;1(v);Regelwerk;Fertigkeit: exot. Fkw, RW: s.Armbrust, Regeln: S. 454
+Mini-Signalraketenkanone;Exotische Fernkampfwaffe;3;5K (Feuer);-5;EM;-;1(v);Regelwerk;Fertigkeit: exot. Fkw, RW: s.Armbrust, Regeln: S. 454
 Mitsubishi Yakusoku MRL;Raketenwerfer;4;Rakete;Rakete;HM/SM;-;4x2(m);Kreuzfeuer;SM, Regeln: S. 47
 mittlere Armbrust;Projektilwaffen (Armbrüste, Harpunengewehre);6;7K;-2;;;4(m);Regelwerk;
-modifizierter Sprühstift;Spezielle Waffen;3;Toxin;-;EM;-;1(s);Tricks&Finesse;Fertigkeit: exot. Fkw, RW: 2 Meter,  Regeln: S. 137
+modifizierter Sprühstift;Exotische Fernkampfwaffe;3;Toxin;-;EM;-;1(s);Tricks&Finesse;Fertigkeit: exot. Fkw, RW: 2 Meter,  Regeln: S. 137
 MoL „Belgrave“ Stockschwert;Klingenwaffen;4;(Str+3)K;-2;1;;;Tricks&Finesse;Regeln: S. 135
 Monofilamentbola;Wurfwaffen;körp.;12K;-8;;;;Kreuzfeuer;Fertigkeit: exot. Fkw,  RW: Shuriken,  Regeln: S. 27
-Monofilamentpeitsche;Nahkampf, Sonstige;5 (7);12K;-8;2;;;Regelwerk;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S. 425
+Monofilamentpeitsche;Exotische Nahkampfwaffe;5 (7);12K;-8;2;;;Regelwerk;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S. 425
 Morrissey Alta;Schwere Pistolen;5 (6);8K;-1;HM;-;12(s);tödl. Schatten;LM,  Regeln: S. 33
 Morrissey Elite;Schwere Pistolen;4 (5);8K;-1;HM;-;5(s);tödl. Schatten;LM, Tarnmod.-1, RW: leichte Pistole
 Mossberg AM-CMDT;Schrotflinten;5 (7);12K;-1;HM/SM/AM;-;10(s);Kreuzfeuer;SM
-Narcoject Gas Gun;Spezielle Waffen;5;Toxin;Toxin;EM;-;2 x 5(s);tödl. Schatten;Fertigkeit: exot. Fernkampfwaffe,  Regeln: S. 44
-Narcoject One;Spezielle Waffen;5;Narcoject;Narcoject;HM;-;6(s);tödl. Schatten;Fertigkeit: Pistole, RW: Holdout, Regeln: S. 28
-Narcoject Pep;Spezielle Waffen;6;10G;speziell;EM;-;2 x 10(s) o. Ext.;tödl. Schatten;Fertigkeit: exot. Fkw, RW: s.Pistole, Regeln: S. 45
-Narcoject Trackstopper;Spezielle Waffen;5;-;-;EM;-;6;tödl. Schatten;Fertigkeit: exot. Fkw, RW: l.Pistole,  Regeln: S. 45
+Narcoject Gas Gun;Exotische Fernkampfwaffe;5;Toxin;Toxin;EM;-;2 x 5(s);tödl. Schatten;Fertigkeit: exot. Fernkampfwaffe,  Regeln: S. 44
+Narcoject One;Pistole;5;Narcoject;Narcoject;HM;-;6(s);tödl. Schatten;Fertigkeit: Pistole, RW: Holdout, Regeln: S. 28
+Narcoject Pep;Exotische Fernkampfwaffe;6;10G;speziell;EM;-;2 x 10(s) o. Ext.;tödl. Schatten;Fertigkeit: exot. Fkw, RW: s.Pistole, Regeln: S. 45
+Narcoject Trackstopper;Exotische Fernkampfwaffe;5;-;-;EM;-;6;tödl. Schatten;Fertigkeit: exot. Fkw, RW: l.Pistole,  Regeln: S. 45
 Nemesis Arms Betäub.stab;Knüppel;6;9G(e);-5;2;;;Kreuzfeuer;
 Nemesis Arms Man-Catcher;Raketenwerfer;4;speziell;speziell;EM;-;10(m);tödl. Schatten;Fertigkeit: exot. Fkw,  Regeln: S. 141
 Nemesis Arms Praetorian;Schwere Pistolen;4 (5);8K;-1;HM;-;12(s);Tricks&Finesse;LM, Bajonett, persönlicher Stil
-Nemesis Arms Praetorian Bajonett;Nahkampf, Sonstige;5;(Str+1)K;-1;-;;;Tricks&Finesse Tödl. Schatten;Fertigkeit: Klingenwaffen  
+Nemesis Arms Praetorian Bajonett;Klingenwaffen;5;(Str+1)K;-1;-;;;Tricks&Finesse Tödl. Schatten;Fertigkeit: Klingenwaffen  
 Nemesis Arms Praetorian II;Schwere Pistolen;4 (6);8K;-1;HM;1;12(s);tödl. Schatten;SM, Nahkampfverstärkung, pers.Stil, Bajonett
 Netz;Wurfwaffen;Körp.-2;-;-;;;;Kreuzfeuer;RW: halbe Wurfmesser,  Regeln: S. 25
-Netzpistole standard;Spezielle Waffen;5;-;-;EM;-;4(k);Kreuzfeuer;Fertigkeit: exot. Fkw,  RW: l. Pistole,  Regeln: S. 28
-Netzpistole XL;Spezielle Waffen;5;-;-;EM;-;2(k);Kreuzfeuer;Fertigkeit: exot. Fkw,  RW: l. Pistole,  Regeln: S. 28
+Netzpistole standard;Exotische Fernkampfwaffe;5;-;-;EM;-;4(k);Kreuzfeuer;Fertigkeit: exot. Fkw,  RW: l. Pistole,  Regeln: S. 28
+Netzpistole XL;Exotische Fernkampfwaffe;5;-;-;EM;-;2(k);Kreuzfeuer;Fertigkeit: exot. Fkw,  RW: l. Pistole,  Regeln: S. 28
 Nitama Optimum II;Sturmgewehre;5 (7);9K;-2;HM/SM/AM;1;30(s);Kreuzfeuer;Schockpolster, SM
 Nitama Optimum II - Schrotflinte;Sturmgewehre;4 (6);10K;-1;HM;1;5(m);-;
 Nitama Sporter;Leichte Pistolen;6 (7);6K;-;HM;-;5(m);Kreuzfeuer;LM, RW: schwere Pistole
@@ -294,9 +294,9 @@ Onotari Arms Violator;Schwere Pistolen;5 (7);7K;-1;HM;1;10(s);Kreuzfeuer;SM, int
 Onotari Interceptor;Raketenwerfer;4 (6);Rakete;Rakete;EM;-;2(v);Regelwerk;SM, kann unterschiedliche Raketen gleichzeitig laden
 Osmiumstreitkolben;Knüppel;4*;(Str+4)K*;-1;2;;;Hauer&Hörner;Regeln zu Präzision und Schaden S. 184
 Panther XXL;Sturmkanonen;5 (7);17K;-6;EM;-;15(s);Regelwerk;SM
-Parashield Pfeilgewehr;Spezielle Waffen;6;Toxin;Toxin;HM;-;6(m);Regelwerk;Fertigkeit: Gewehre,  RW: Sturmgew.,  Regeln: S. 436
-Parashield Pfeilpistole;Spezielle Waffen;5;Toxin;Toxin;HM;-;5(s);Regelwerk;Fertigkeit: Pistole,  RW: schw.Pistole, Regeln: S. 436
-Pepper-Punch-Stift;Spezielle Waffen;3;PepperP.;-;EM;-;1(s);Tricks&Finesse;Fertigkeit: exot. Fkw, RW: 2 Meter,  Regeln: S. 137
+Parashield Pfeilgewehr;Gewehre;6;Toxin;Toxin;HM;-;6(m);Regelwerk;Fertigkeit: Gewehre,  RW: Sturmgew.,  Regeln: S. 436
+Parashield Pfeilpistole;Pistole;5;Toxin;Toxin;HM;-;5(s);Regelwerk;Fertigkeit: Pistole,  RW: schw.Pistole, Regeln: S. 436
+Pepper-Punch-Stift;Exotische Fernkampfwaffe;3;PepperP.;-;EM;-;1(s);Tricks&Finesse;Fertigkeit: exot. Fkw, RW: 2 Meter,  Regeln: S. 137
 Phalanx System Vogeljäger II;Raketenwerfer;5;Rakete;Rakete;EM;-;1(v);tödl. Schatten;Zielfernrohr, Freund-/Feinderkennung, Regeln: S. 43
 Pioneer 60;Sportgewehre;5;10K;-1;EM;-;5(m);Kreuzfeuer;
 Pistolenarmbrust;Projektilwaffen (Armbrüste, Harpunengewehre);7;4K;-;EM;;1(v);Kreuzfeuer;RW:  schwere Pistole
@@ -306,14 +306,14 @@ PJSS Modell 55;Schrotflinten;6;11K;-1;EM;1;2(k);Regelwerk;Schockpolster, kurze S
 PJSS Modell 75;Schrotflinten;6;11K;-1;EM;1;2(k);SotA ADL;Schockpolster, kurze Salve möglich
 PJSS Modell 75-III;Schrotflinten;6;11K;-1;EM;1;2(k);SotA ADL;Schockpolster, kurze Salve möglich
 PJSS Modell 75-III- Büchsenlauf;Schrotflinten;6;12K;-2;EM;1;1(k);-;Salve möglich, wenn alle drei Läufe gleiche Muni
-Plaststahlkappenstiefel;Nahkampf, Sonstige;körp.;(Str+1)K;-;-;;;Harte Ziele;Fertigkeit: waffenloser Kampf
+Plaststahlkappenstiefel;Waffenloser Kampf;körp.;(Str+1)K;-;-;;;Harte Ziele;Fertigkeit: waffenloser Kampf
 PSK-3 schwere Klapppistole;Schwere Pistolen;4 (5);8K;-1;HM;-;10(s);Kreuzfeuer;Regeln: S. 32
 PSK-4 Klapp-Automatikpistole;Automatikpistolen;5 (6);6K;-;HM/SM;-1;30(s);Kreuzfeuer;auskl. Schulterstütze, LM, Regeln: S. 34
 Raecor Sting;Holdout-Pistolen;4;8k(f);5;EM;-;4(m);tödl. Schatten;nur Flechette-Munition möglich
 Ranger Arms SM-5;Scharfschützengewehre;8;14K;-5;HM;1;15(s);Regelwerk;Schockploster,, Zielfern (Vergr.), Schalldämpfer, Zerlegbar
 Rauchgranate;Wurfwaffen;körp.;-;-;10m Radius;;;Regelwerk;Regeln: S. 438
-Reißzahnimplantat;Nahkampf, Sonstige;körp.;(Str)K;-;-;;;Bodyshop;Fertigkeit: waffenl.Kampf,  Regeln: S. 96
-Reißzahnimplantat einziehbar;Nahkampf, Sonstige;körp.;(Str)K;-;-;;;Bodyshop;Fertigkeit: waffenl.Kampf,  einziehbar,  Regeln: S. 96
+Reißzahnimplantat;Waffenloser Kampf;körp.;(Str)K;-;-;;;Bodyshop;Fertigkeit: waffenl.Kampf,  Regeln: S. 96
+Reißzahnimplantat einziehbar;Waffenloser Kampf;körp.;(Str)K;-;-;;;Bodyshop;Fertigkeit: waffenl.Kampf,  einziehbar,  Regeln: S. 96
 Remington 950;Sportgewehre;7;12K;-4;EM;-;5(m);Regelwerk;Zielfernrohr (Vergr.)
 Remington 990;Schrotflinten;4;11K;-1;HM;-;8(s);Kreuzfeuer;Montageschienen (auf- u. Unterlauf)
 Remington 995 „Buzzsaw“;Schrotflinten;4;11K;-1;HM;-;8(s);tödl. Schatten;Vordergriff, mod.Repetiergriff, Montageschiene (oben u. unten), Sturmzähne, Regeln: S. 138
@@ -331,22 +331,22 @@ Sako M2045 SU;Sturmgewehre;5 (6);9K;-2;HM/SM/AM;2 (3);30(s);Gruppe;LM, Gasventil
 Saphirmesser;Klingenwaffen;5;(Str+2)K;-3;-;;;Harte Ziele;nichtmetallisch
 Savalette Guardian;Schwere Pistolen;5 (7);8K;-1;HM/SM*;1;12(s);Kreuzfeuer;SM, Micro-Gyro-Rückstoßkomp.-1, Salve = kompl. H.
 SBD-44;Sturmgewehre;3;10K;-1;HM/SM/AM;-;32(s);Schattenhb. 1;altes Modell
-Schießstock-Plagiat;Spezielle Waffen;5;9K;-;EM;-;1;Kreuzfeuer;Fertigkeit: exot. Fkw,  RW: Taser,  Regeln: S. 27
-Schlagring;Nahkampf, Sonstige;körp.;(Str+1)K;-;-;;;Regelwerk;Fertigkeit: waffenloser Kampf
+Schießstock-Plagiat;Exotische Fernkampfwaffe;5;9K;-;EM;-;1;Kreuzfeuer;Fertigkeit: exot. Fkw,  RW: Taser,  Regeln: S. 27
+Schlagring;Waffenloser Kampf;körp.;(Str+1)K;-;-;;;Regelwerk;Fertigkeit: waffenloser Kampf
 Schmerzgranate;Wurfwaffen;körp.;„Toxin“ 8;-;10m Radius;;;Tricks&Finesse;Regeln: S. 137
 Schockgranate;Wurfwaffen;körp.;10G;-4;10m Radius;;;Regelwerk;Regeln: S. 438
-Schockhandschuh;Nahkampf, Sonstige;körp.;8G(e);-5;-;;;Regelwerk;Fertigkeit: waffenloser Kampf
-Schredderkiefer;Nahkampf, Sonstige;körp.;(Str+3)K;-6;-;;;Bodyshop;Fertigkeit: waffenloser Kampf, Regeln: S. 96
-Schutzschild;Nahkampf, Sonstige;4;9G(e);-5;-;;;Regelwerk;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S. 442
+Schockhandschuh;Waffenloser Kampf;körp.;8G(e);-5;-;;;Regelwerk;Fertigkeit: waffenloser Kampf
+Schredderkiefer;Waffenloser Kampf;körp.;(Str+3)K;-6;-;;;Bodyshop;Fertigkeit: waffenloser Kampf, Regeln: S. 96
+Schutzschild;Exotische Nahkampfwaffe;4;9G(e);-5;-;;;Regelwerk;Fertigkeit: exot. Nahkampfwaffe,  Regeln: S. 442
 schwere Armbrust;Projektilwaffen (Armbrüste, Harpunengewehre);5;10K;-3;;;4(m);Regelwerk;
 Schwert;Klingenwaffen;6;(Str+3)K;-2;1;;;Regelwerk;
 SCK Modell 100;Maschinenpistole;5 (7);8K;-;HM/SM;-1;30(s);Regelwerk;auskl. Schulterstütze, SM
-Shiawase Arms Blazer;Flammenwerfer (Exot. Fernkampf, KF S. 49);6;10K;-6;HM/SM/AM;-;4(s);Kreuzfeuer;RW: Taser
-Shiawase Arms Incinerator;Flammenwerfer (Exot. Fernkampf, KF S. 49);4;12K;-6;EM;-;6(s);Schattenhb. 1;RW: leichte Pistole
+Shiawase Arms Blazer;Exotische Fernkampfwaffe;6;10K;-6;HM/SM/AM;-;4(s);Kreuzfeuer;RW: Taser
+Shiawase Arms Incinerator;Exotische Fernkampfwaffe;4;12K;-6;EM;-;6(s);Schattenhb. 1;RW: leichte Pistole
 Shiawase Arms Monsoon;Sturmgewehre;5 (7);10K;-1;HM/AM;1;20(v) x 6;Schattenhb. 1;elektr. Feuern, SM, Nahkampfverstärkung
 Shiawase Arms Puzzler;Leichte Pistolen;4;6K;-;HM;-;12(s);Kreuzfeuer;zerlegbar, Regel: S. 31
 Shiawase Arms Rain;Schrotflinten;4;10K;-1;HM;-1;5(v);Schattenhb. 1;ausz. Schulterstütze
-Shiawase Arms Simoon;Spezielle Waffen;5;6K;-;HM/AM;-;6(v);Harte Ziele;Fertigkeit: exot. Fkw,  RW: l. Pistole,  Regeln: S. 176
+Shiawase Arms Simoon;Exotische Fernkampfwaffe;5;6K;-;HM/AM;-;6(v);Harte Ziele;Fertigkeit: exot. Fkw,  RW: l. Pistole,  Regeln: S. 176
 Shuriken;Wurfwaffen;körp.;(Str+1)K;-1;;;;Regelwerk;
 Splittergranate;Wurfwaffen;körp.;18K(f);5;#NAME?;;;Regelwerk;Regeln: S. 438
 Sprenggranate;Wurfwaffen;körp.;16K;-2;#NAME?;;;Regelwerk;Regeln: S. 438
@@ -375,11 +375,11 @@ Teleskopstab;Knüppel;4;(Str+2)K;-;2;;;Regelwerk;
 Terracotta Arms AM-47;Scharfschützengewehre;7 (9);15K;-4;HM;-2;18(s);Kreuzfeuer;Zweibein, SM, Zielfern (Bild, RV, Vergr.), Kommlink-5,
 Terracotta Arms Pup;Holdout-Pistolen;4 (6);6K;-;HM;-;5(s);tödl. Schatten;SM, Modell mit Schalldämpfer (Verf. 6V, Preis 600,-)
 Terracotta Arms X-5 MGL;Raketenwerfer;4;Rakete;Rakete;EM;1;6(tr);tödl. Schatten;Vordergriff
-Tiffani Schußarmband;Spezielle Waffen;5 (6);7K;-;EM;-;1(k);Kreuzfeuer;LM, Fertigkeit: exot. Fkw,  RW: Taser,  Regeln: S. 28
+Tiffani Schußarmband;Exotische Fernkampfwaffe;5 (6);7K;-;EM;-;1(k);Kreuzfeuer;LM, Fertigkeit: exot. Fkw,  RW: Taser,  Regeln: S. 28
 Tiffani-Defiance Protector;Taser;5 (6);7G(e);-5;HM;-;3(m);Kreuzfeuer;LM
 Tonfa;Knüppel;4;(Str+3)K;-;1;;;tödl. Schatten;Regeln: S. 23
 Totschläger;Knüppel;5;(Str+2)K;-;-;;;Regelwerk;
-Trafalgar Schießstock;Spezielle Waffen;6;7K;-;EM;-;1(k);Kreuzfeuer;Fertigkeit: exot. Fkw,  RW: Taser,  Regeln: S. 27
+Trafalgar Schießstock;Exotische Fernkampfwaffe;6;7K;-;EM;-;1(k);Kreuzfeuer;Fertigkeit: exot. Fkw,  RW: Taser,  Regeln: S. 27
 Überlebensmesser;Klingenwaffen;5;(Str+2)K;-1;-;;;Regelwerk;
 Ultimax 70;Automatikpistolen;5 (6);6K;-;SM/AM;2;15(s);Kreuzfeuer;Gasventil-2, LM
 Ultimax MMG - MMG;Mittleres Maschinengewehr;5 (6);10K;-2;AM;1 (6);50(s) o. Gurt;Kreuzfeuer;Vordergriff, Dreibein, LM

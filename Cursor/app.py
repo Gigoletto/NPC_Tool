@@ -104,6 +104,22 @@ def _fold_icon_name(name: str) -> str:
     return "".join(char for char in swapped.casefold() if char.isalnum())
 
 
+def _skill_sort_key(name: str) -> str:
+    """Deutsche Alphabet-Sortierung: Umlaute wie Grundbuchstaben."""
+    table = str.maketrans(
+        {
+            "\u00e4": "a",
+            "\u00f6": "o",
+            "\u00fc": "u",
+            "\u00c4": "a",
+            "\u00d6": "o",
+            "\u00dc": "u",
+            "\u00df": "ss",
+        }
+    )
+    return str(name).translate(table).casefold()
+
+
 def _icon_file(name: str) -> Path | None:
     if not ICON_DIR.is_dir():
         return None
@@ -863,7 +879,13 @@ def instantiate_npc(
         )
     except KeyError:
         return None
-    return apply_metatype_from_frames(npc, config, frames)
+    npc = apply_metatype_from_frames(npc, config, frames)
+    if isinstance(npc, engine.Critter) and not npc.uses_force:
+        catalog = engine.catalog_skill_names(
+            frames.get(engine.ARCHETYPE_DATABASE[engine.ARCHETYPE_MUNDANE])
+        )
+        npc.skills = {name: 0 for name in catalog}
+    return npc
 
 
 def apply_metatype_from_frames(
@@ -995,26 +1017,6 @@ def select_npc_config(frames: dict[str, pd.DataFrame]) -> dict | None:
         _ensure_choice(GENERATOR_METATYPE_KEY, metatypes)
         metatype = st.selectbox("Metatyp", metatypes, key=GENERATOR_METATYPE_KEY)
 
-    fields = st.columns(3)
-    slot = 0
-
-    # Critter sind zahlreich - erst nach Kategorie filtern.
-    if archetype == engine.ARCHETYPE_CRITTER and "Kategorie" in df.columns:
-        categories = ["Alle"] + sorted(df["Kategorie"].dropna().unique())
-        category = fields[slot].selectbox("Kategorie", categories)
-        slot += 1
-        if category != "Alle":
-            df = df[df["Kategorie"] == category]
-
-    if archetype == engine.ARCHETYPE_CRITTER:
-        usable = df.apply(engine.critter_row_is_complete, axis=1)
-        hidden = int((~usable).sum())
-        df = df[usable]
-        if hidden:
-            st.caption(
-                f"{hidden} Critter ohne Attributswerte ausgeblendet (z. B. Bugul)."
-            )
-
     if engine.uses_metatype(archetype):
         names = engine.template_names(df, archetype)
     else:
@@ -1024,13 +1026,59 @@ def select_npc_config(frames: dict[str, pd.DataFrame]) -> dict | None:
         return None
 
     _ensure_choice(GENERATOR_NAME_KEY, names)
-    name = fields[slot].selectbox(
-        "Name",
-        names,
-        key=GENERATOR_NAME_KEY,
-        format_func=template_display_name,
-    )
-    slot += 1
+
+    if engine.uses_metatype(archetype):
+        if archetype == engine.ARCHETYPE_MAGICIAN:
+            name_col, skill_col, magic_col, trad_col = st.columns(
+                (1.15, 1.55, 0.95, 1.15)
+            )
+        else:
+            name_col, skill_col = st.columns((1.2, 2.8))
+            magic_col = trad_col = None
+        name = name_col.selectbox(
+            "Name",
+            names,
+            key=GENERATOR_NAME_KEY,
+            format_func=template_display_name,
+        )
+    elif archetype == engine.ARCHETYPE_CRITTER:
+        extra_col = None
+        if "Kategorie" in df.columns:
+            kat_col, name_col, extra_col = st.columns((1.0, 1.15, 1.85))
+            categories = ["Alle"] + sorted(df["Kategorie"].dropna().unique())
+            category = kat_col.selectbox("Kategorie", categories)
+            if category != "Alle":
+                df = df[df["Kategorie"] == category]
+        else:
+            name_col, extra_col = st.columns((1.2, 2.8))
+        usable = df.apply(engine.critter_row_is_complete, axis=1)
+        hidden = int((~usable).sum())
+        df = df[usable]
+        if hidden:
+            st.caption(
+                f"{hidden} Critter ohne Attributswerte ausgeblendet (z. B. Bugul)."
+            )
+        names = sorted(dict.fromkeys(df.index))
+        if not names:
+            st.warning("Keine Auswahl vorhanden.")
+            return None
+        _ensure_choice(GENERATOR_NAME_KEY, names)
+        name = name_col.selectbox(
+            "Name",
+            names,
+            key=GENERATOR_NAME_KEY,
+            format_func=template_display_name,
+        )
+    else:
+        fields = st.columns(3)
+        slot = 0
+        name = fields[slot].selectbox(
+            "Name",
+            names,
+            key=GENERATOR_NAME_KEY,
+            format_func=template_display_name,
+        )
+        slot += 1
 
     config = {
         "uid": "",
@@ -1041,6 +1089,7 @@ def select_npc_config(frames: dict[str, pd.DataFrame]) -> dict | None:
         "uses_force": False,
         "magic": None,
         "skill_ratings": {},
+        "selected_skills": [],
         "spells": [],
         "spell_force": 4,
         "tradition": engine.TRADITION_HERMETIC,
@@ -1056,6 +1105,9 @@ def select_npc_config(frames: dict[str, pd.DataFrame]) -> dict | None:
         "armor": None,
     }
 
+    if engine.uses_metatype(archetype):
+        _render_skill_catalog_picker(skill_col, config, frames)
+
     if archetype == engine.ARCHETYPE_SPIRIT:
         config["force"] = int(
             fields[slot].slider("Kraftstufe (F)", 1, engine.MAX_FORCE, 4)
@@ -1065,8 +1117,10 @@ def select_npc_config(frames: dict[str, pd.DataFrame]) -> dict | None:
         config["uses_force"] = engine.critter_uses_force(row)
         if config["uses_force"]:
             config["force"] = int(
-                fields[slot].slider("Kraftstufe (F)", 1, engine.MAX_FORCE, 4)
+                extra_col.slider("Kraftstufe (F)", 1, engine.MAX_FORCE, 4)
             )
+        else:
+            _render_skill_catalog_picker(extra_col, config, frames)
     elif archetype == engine.ARCHETYPE_MAGICIAN:
         row = engine.get_row(df, name)
         magic_key = f"generator_magic_{name}"
@@ -1076,7 +1130,7 @@ def select_npc_config(frames: dict[str, pd.DataFrame]) -> dict | None:
         )
         _seed_widget(magic_key, magic_preset)
         config["magic"] = int(
-            fields[slot].slider(
+            magic_col.slider(
                 "Magie-Attribut",
                 1,
                 engine.MAX_FORCE,
@@ -1084,11 +1138,10 @@ def select_npc_config(frames: dict[str, pd.DataFrame]) -> dict | None:
                 help="Unabhaengig vom Wert in der CSV frei waehlbar.",
             )
         )
-        slot += 1
         _render_tradition_control(
             config,
             f"generator_tradition_{name}",
-            container=fields[slot],
+            container=trad_col,
         )
         config["spells"] = select_spells(frames.get("Zauber"), f"{archetype}|{name}")
         config["spell_force"] = config["magic"]
@@ -1221,6 +1274,14 @@ def default_npc_label(config: dict) -> str:
     return pretty
 
 
+def npc_source_line(npc: engine.BaseNPC) -> str:
+    """Fundstelle fuer die Kopfzeile; leer, wenn in der CSV nichts steht."""
+    source = engine.to_text(getattr(npc, "source", ""))
+    if source in {"", "-"}:
+        return ""
+    return source
+
+
 def _seed_widget(key: str, value: object) -> None:
     """Setzt den Widget-Startwert nur beim ersten Erscheinen, nie zusammen mit value=."""
     if key not in st.session_state:
@@ -1313,7 +1374,7 @@ def render_attribute_editor(
         columns[3].number_input(
             "Panzerung",
             0,
-            30,
+            engine.MAX_FORCE * 2,
             step=1,
             key=armor_key,
             help="Grundwert aus der CSV, bei Geistern Immunitaet 2 x F, frei anpassbar.",
@@ -1333,33 +1394,27 @@ def render_attribute_editor(
     )
 
 
-def _baseline_trained_skills(npc: engine.BaseNPC) -> dict[str, int]:
-    """Fertigkeiten mit Stufe > 0, in der Reihenfolge der CSV-Spalten."""
-    skills = getattr(npc, "skills", None)
-    if not skills:
-        return {}
-    return {
-        name: int(value)
-        for name, value in skills.items()
-        if int(value) > 0
-    }
-
-
-def render_skill_editor(
-    npc: engine.MundaneNPC,
+def render_spirit_skill_editor(
+    npc: engine.Spirit | engine.Critter,
     config: dict,
     state_key: str,
     frames: dict[str, pd.DataFrame] | None = None,
 ) -> None:
-    """Fertigkeiten > 0 wie Attribute: Ueberschrift und einzelne Zahlenfelder."""
+    """Geist-Fertigkeiten: Standard = Kraftstufe, manuell anpassbar."""
     st.markdown("**Fertigkeiten** - mit den Pfeilen anpassen")
 
     baseline_npc = instantiate_npc(config, frames or {}) if frames else None
-    source = baseline_npc if isinstance(baseline_npc, engine.MundaneNPC) else npc
-    natural = _baseline_trained_skills(source)
-    items = list(natural.items())
+    source = (
+        baseline_npc
+        if isinstance(baseline_npc, (engine.Spirit, engine.Critter))
+        else npc
+    )
+    natural_rating = int(getattr(source, "force", 0) or 0)
+    items = [
+        (skill, natural_rating)
+        for skill in getattr(source, "skills", {}) or {}
+    ]
     if not items:
-        st.caption("Keine Fertigkeiten mit Stufe > 0.")
         config["skill_ratings"] = {}
         return
 
@@ -1380,11 +1435,126 @@ def render_skill_editor(
             )
 
     config["skill_ratings"] = {
-        label: value
-        for label, value in values.items()
-        if value != natural[label]
+        name: rating
+        for name, rating in values.items()
+        if rating != natural_rating
     }
     engine.apply_overrides(npc, skills=values)
+
+
+def _render_skill_catalog_picker(
+    container, config: dict, frames: dict[str, pd.DataFrame]
+) -> None:
+    """Alle Fertigkeiten waehlbar; Vorlage plus Metatyp sind vorbelegt."""
+    npc = instantiate_npc(config, frames)
+    skills = getattr(npc, "skills", None) or {}
+    is_open_critter = isinstance(npc, engine.Critter) and not npc.uses_force
+    if not isinstance(npc, engine.MundaneNPC) and not is_open_critter:
+        config["selected_skills"] = []
+        return
+    options = sorted(skills.keys(), key=_skill_sort_key)
+    if is_open_critter:
+        preset: list[str] = []
+        help_text = (
+            "Keine Vorbelegung, weil Critter zu unterschiedlich sind. "
+            "Abwahl gilt als ungeuebt. Wechsel des Namens setzt die Auswahl zurueck."
+        )
+    else:
+        preset = sorted(
+            (name for name, rating in skills.items() if int(rating) > 0),
+            key=_skill_sort_key,
+        )
+        help_text = (
+            "Vorbelegt mit den Fertigkeiten aus der Vorlage (Stufe > 0). "
+            "Abwahl gilt als ungeuebt. Wechsel von Name oder Metatyp setzt "
+            "auf die Grunddaten zurueck."
+        )
+    widget_key = (
+        f"generator_selected_skills_{config['archetype']}_"
+        f"{config.get('metatype')}_{config['name']}"
+    )
+    allowed = set(options)
+    if widget_key not in st.session_state:
+        st.session_state[widget_key] = list(preset)
+    else:
+        current = st.session_state.get(widget_key) or []
+        filtered = [name for name in current if name in allowed]
+        if filtered != list(current):
+            st.session_state[widget_key] = filtered
+    selected = container.multiselect(
+        "Fertigkeiten",
+        options,
+        key=widget_key,
+        help=help_text,
+        placeholder="Fertigkeiten waehlen",
+    )
+    chosen = set(selected or [])
+    config["selected_skills"] = [name for name in options if name in chosen]
+
+
+def render_skill_editor(
+    npc: engine.BaseNPC,
+    config: dict,
+    state_key: str,
+    frames: dict[str, pd.DataFrame] | None = None,
+) -> None:
+    """Gewaehlte Fertigkeiten wie Attribute: Ueberschrift und Zahlenfelder."""
+    st.markdown("**Fertigkeiten** - mit den Pfeilen anpassen")
+
+    baseline_npc = instantiate_npc(config, frames or {}) if frames else None
+    source = (
+        baseline_npc
+        if getattr(baseline_npc, "skills", None) is not None
+        else npc
+    )
+    natural = {
+        name: int(value) for name, value in getattr(source, "skills", {}).items()
+    }
+    trained = [name for name, value in natural.items() if value > 0]
+    selected = config.get("selected_skills")
+    if selected is None:
+        selected = trained
+    selected = sorted(
+        (name for name in natural if name in set(selected)),
+        key=_skill_sort_key,
+    )
+    items = [(name, natural[name]) for name in selected]
+    if not items:
+        st.caption("Keine Fertigkeiten gewaehlt.")
+        applied = {name: 0 for name in natural}
+        config["skill_ratings"] = {
+            name: rating
+            for name, rating in applied.items()
+            if rating != natural[name]
+        }
+        engine.apply_overrides(npc, skills=applied)
+        return
+
+    values: dict[str, int] = {}
+    for start in range(0, len(items), 4):
+        columns = st.columns(4)
+        for column, (label, preset) in zip(columns, items[start : start + 4]):
+            skill_key = f"skill_{state_key}_{label}"
+            _seed_widget(skill_key, int(preset))
+            values[label] = int(
+                column.number_input(
+                    label,
+                    min_value=0,
+                    max_value=engine.MAX_FORCE,
+                    step=1,
+                    key=skill_key,
+                )
+            )
+
+    applied = {
+        name: int(values[name]) if name in values else 0 for name in natural
+    }
+    config["skill_ratings"] = {
+        name: rating
+        for name, rating in applied.items()
+        if rating != natural[name]
+    }
+    engine.apply_overrides(npc, skills=applied)
 
 
 def _render_tradition_control(
@@ -1630,11 +1800,16 @@ def render_generator(
         return
 
     header, button = st.columns([4, 1])
-    header.subheader(
+    title = (
         f"{template_display_name(npc.name)}"
         + (f"  \u00b7  {config['metatype']}" if config.get("metatype") else "")
         + f"  \u00b7  {archetype_label(npc.ARCHETYPE)}"
     )
+    if isinstance(npc, (engine.Critter, engine.Spirit)):
+        source = npc_source_line(npc)
+        if source:
+            title += f"  \u00b7  {source}"
+    header.subheader(title)
     # Der Klick wird erst am Ende ausgewertet, wenn Attribute und Ausruestung
     # in der Konfiguration stehen.
     add_clicked = button.button(
@@ -1652,6 +1827,12 @@ def render_generator(
     render_attribute_editor(npc, config, state_key, frames)
     st.divider()
     if isinstance(npc, engine.MundaneNPC):
+        render_skill_editor(npc, config, state_key, frames)
+    elif isinstance(npc, engine.Spirit):
+        render_spirit_skill_editor(npc, config, state_key, frames)
+    elif isinstance(npc, engine.Critter) and npc.uses_force:
+        render_spirit_skill_editor(npc, config, state_key, frames)
+    elif isinstance(npc, engine.Critter):
         render_skill_editor(npc, config, state_key, frames)
     else:
         render_details(npc, config, state_key)
@@ -1688,8 +1869,6 @@ def render_generator(
     )
     render_dashboard_pools(npc_pools, npc, detailed=True)
     st.caption("Gewuerfelt wird am Tisch - das Tool zaehlt nur die Wuerfel.")
-    if isinstance(npc, engine.Critter):
-        st.caption(pools.CRITTER_SKILL_NOTE)
 
     with st.expander("Erl\u00e4uterungen & Berechnungen"):
         render_npc_calculations(npc, config, skill_map, skill_limits)
@@ -1709,6 +1888,9 @@ def copy_config(config: dict) -> dict:
     entry = dict(config)
     entry["spells"] = list(config.get("spells", []))
     entry["skill_ratings"] = dict(config.get("skill_ratings", {}))
+    entry["selected_skills"] = [
+        str(name) for name in config.get("selected_skills") or [] if name
+    ]
     entry["attributes"] = dict(config.get("attributes", {}))
     entry["weapons"] = [str(name) for name in config.get("weapons", []) if name]
     entry["weapon_ap"] = list(config.get("weapon_ap") or [])
@@ -1734,6 +1916,7 @@ def config_to_export(entry: dict) -> dict:
         "uses_force": bool(copied.get("uses_force")),
         "magic": copied.get("magic"),
         "skill_ratings": copied.get("skill_ratings", {}),
+        "selected_skills": copied.get("selected_skills", []),
         "spells": copied.get("spells", []),
         "spell_force": int(copied.get("spell_force", 4)),
         "tradition": copied.get("tradition", engine.TRADITION_HERMETIC),
@@ -1851,6 +2034,14 @@ def import_npc(raw: object) -> dict:
         raise ValueError("Mindestens ein NPC hat keinen Namen.")
 
     magic = _optional_int(raw.get("magic"), 1, engine.MAX_FORCE)
+    selected_raw = raw.get("selected_skills") or []
+    if not isinstance(selected_raw, list):
+        selected_raw = []
+    selected_skills = [
+        engine.normalize_skill_name(_clip_text(skill))
+        for skill in selected_raw[:MAX_IMPORT_SKILLS]
+        if _clip_text(skill)
+    ]
     ratings_raw = raw.get("skill_ratings") or {}
     if not isinstance(ratings_raw, dict):
         ratings_raw = {}
@@ -1886,6 +2077,7 @@ def import_npc(raw: object) -> dict:
         "uses_force": bool(raw.get("uses_force", False)),
         "magic": magic,
         "skill_ratings": skill_ratings,
+        "selected_skills": selected_skills,
         "spells": _string_list(raw.get("spells"), MAX_IMPORT_SPELLS),
         "spell_force": _bounded_int(
             raw.get("spell_force", magic or 4), magic or 4, 1, engine.MAX_FORCE
@@ -2248,6 +2440,9 @@ def render_card(
             caption = f"{config['metatype']} \u00b7 {caption}"
         if isinstance(npc, engine.MagicianNPC):
             caption += f" \u00b7 {npc.tradition}"
+        source = npc_source_line(npc)
+        if source:
+            caption += f" \u00b7 {source}"
         st.caption(caption)
 
         if (
@@ -2756,8 +2951,6 @@ def render_npc_calculations(
         )
 
     notes: list[str] = []
-    if isinstance(npc, engine.Critter):
-        notes.append(pools.CRITTER_SKILL_NOTE)
     if isinstance(npc, engine.MagicianNPC):
         notes.append(f"Entzug ({npc.tradition}): WIL + {npc.drain_attribute}")
         notes.append("Spruchzauberei: Limit = Kraftstufe des Zaubers (KS)")
@@ -2770,6 +2963,15 @@ def render_npc_calculations(
         notes.append(
             "Schadenswiderstand: Immunitaet 2 x F, hoehere getragene Panzerung gewinnt"
         )
+        notes.append(
+            "Fertigkeiten: Standard = Kraftstufe, Magie des Geistes = Kraftstufe"
+        )
+    if isinstance(npc, engine.Critter) and npc.uses_force:
+        notes.append("Fertigkeiten: Standard = Kraftstufe")
+        notes.append(
+            "Schadenswiderstand: Immunitaet 2 x F, hoehere getragene Panzerung gewinnt"
+        )
+        notes.append("Initiativwuerfel: +2W6")
     if notes:
         lines.append(_explain_heading("Hinweise:"))
         lines.extend(html.escape(note) for note in notes)

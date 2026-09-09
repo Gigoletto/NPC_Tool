@@ -51,6 +51,12 @@ FALLBACK_SKILL_ATTRIBUTES: dict[str, str] = {
     "Wurfwaffen": "Geschick",
     "Exotische Nahkampfwaffe": "Geschick",
     "Exotische Fernkampfwaffe": "Geschick",
+    "Askennen": "Intuition",
+    "Laufen": engine.STAERKE,
+    "Handwerk": "Intuition",
+    "Arkana": "Logik",
+    "Binden": "Magie",
+    "Kybernetik": "Logik",
 }
 
 # Abzug fuer Proben auf eine Fertigkeit, die der NPC nicht besitzt.
@@ -75,6 +81,7 @@ WEAPON_SKILL_RULES: tuple[tuple[str, str], ...] = (
     ("pistole", "Pistolen"),
     ("taser", "Pistolen"),
     ("projektilwaffen", "Projektilwaffen"),
+    ("gewehr", "Gewehre"),
     ("wurfwaffen", "Wurfwaffen"),
     ("klingenwaffen", "Klingenwaffen"),
     ("kn\u00fcppel", "Kn\u00fcppel"),  # Knueppel
@@ -83,6 +90,7 @@ WEAPON_SKILL_RULES: tuple[tuple[str, str], ...] = (
     ("flammenwerfer", "Exotische Fernkampfwaffe"),
     ("spezielle waffen", "Exotische Fernkampfwaffe"),
     ("exot", "Exotische Fernkampfwaffe"),
+    ("waffenlos", "Waffenloser Kampf"),
 )
 
 FALLBACK_WEAPON_SKILL = "Waffenloser Kampf"
@@ -90,10 +98,6 @@ FALLBACK_WEAPON_SKILL = "Waffenloser Kampf"
 ASTRAL_COMBAT_SKILL = "Astralkampf"
 
 MAGIC_ATTACK_SKILLS = ("Spruchzauberei", engine.BESCHWOEREN, ASTRAL_COMBAT_SKILL)
-
-CRITTER_SKILL_NOTE = (
-    "Hausregel: Critter ohne Fertigkeitswerte, Probe = Attribut x 2"
-)
 
 # Kuerzel der natuerlichen Limits auf den Karten.
 LIMIT_PHYSICAL = "K"
@@ -134,6 +138,10 @@ FALLBACK_SKILL_LIMITS: dict[str, str] = {
     "Exotische Nahkampfwaffe": LIMIT_PHYSICAL,
     "Exotische Fernkampfwaffe": LIMIT_PHYSICAL,
     ASTRAL_COMBAT_SKILL: LIMIT_MENTAL,
+    "Askennen": LIMIT_MENTAL,
+    "Laufen": LIMIT_PHYSICAL,
+    "Handwerk": LIMIT_MENTAL,
+    "Arkana": LIMIT_MENTAL,
     "Selbstbeherrschung": LIMIT_SOCIAL,
 }
 
@@ -257,9 +265,11 @@ def build_skill_limit_map(skill_db: pd.DataFrame | None = None) -> dict[str, str
 
     for name, category in skill_db["Kategorie"].items():
         skill = str(name)
-        mapping[skill] = SKILL_LIMIT_OVERRIDES.get(
+        kind = SKILL_LIMIT_OVERRIDES.get(
             skill, limit_kind_from_category(category)
         )
+        mapping[skill] = kind
+        mapping[engine.normalize_skill_name(skill)] = kind
     mapping.update(SKILL_LIMIT_OVERRIDES)
     return mapping
 
@@ -316,7 +326,9 @@ def build_skill_attribute_map(skill_db: pd.DataFrame | None = None) -> dict[str,
     for name, code in skill_db["attribute"].items():
         attribute = ATTRIBUTE_BY_CODE.get(str(code).strip().upper())
         if attribute:
-            mapping[str(name)] = attribute
+            skill = str(name)
+            mapping[skill] = attribute
+            mapping[engine.normalize_skill_name(skill)] = attribute
     return mapping
 
 
@@ -325,6 +337,8 @@ def attribute_value(npc: engine.BaseNPC, attribute: str) -> int:
     if attribute in npc.attributes:
         return npc.attributes[attribute]
     if attribute == "Magie":
+        if isinstance(npc, engine.Spirit):
+            return engine.to_int(getattr(npc, "magic", None) or npc.force)
         return engine.to_int(getattr(npc, "magic", None) or npc.row.get("Magie"))
     if attribute == "Resonanz":
         return engine.to_int(npc.row.get("Resonanz"))
@@ -368,11 +382,7 @@ def attack_pool(
 ) -> DicePool:
     """Angriffspool einer konkreten Waffe, z. B. 'Geschick 5 + Klingenwaffen 6'."""
     skill = weapon_skill(weapon.weapon_type)
-    if isinstance(npc, engine.Spirit):
-        attribute = (skill_map or FALLBACK_SKILL_ATTRIBUTES).get(skill, "Geschick")
-        pool = spirit_skill_pool(npc, skill, attribute, modifier)
-    else:
-        pool = skill_pool(npc, skill, skill_map, modifier)
+    pool = skill_pool(npc, skill, skill_map, modifier)
     limit = weapon.accuracy if weapon.accuracy != "-" else None
     note = f"Schaden {weapon.damage} \u00b7 DK {weapon.ap}"
     return DicePool(
@@ -439,24 +449,33 @@ def drain_pool(npc: engine.BaseNPC, modifier: int = 0) -> DicePool:
     )
 
 
+def spirit_skill_rating(npc: engine.Spirit, skill: str) -> int:
+    """Fertigkeitswert des Geistes; Standard ist die Kraftstufe."""
+    skills = getattr(npc, "skills", None) or {}
+    if skill in skills:
+        return engine.to_int(skills[skill])
+    return npc.force
+
+
 def spirit_skill_pool(
     npc: engine.Spirit, label: str, attribute: str, modifier: int = 0
 ) -> DicePool:
-    """Geister beherrschen ihre Fertigkeiten in Hoehe der Kraftstufe."""
+    """Geist-Probe: Attribut + Fertigkeit (Standard = Kraftstufe)."""
+    rating = spirit_skill_rating(npc, label)
     return DicePool(
         label,
-        ((attribute, attribute_value(npc, attribute)), ("Kraftstufe", npc.force)),
+        ((attribute, attribute_value(npc, attribute)), (label, rating)),
         modifier,
     )
 
 
 def spirit_unarmed_attack_pool(npc: engine.Spirit, modifier: int = 0) -> DicePool:
-    """GES + Waffenloser Kampf (Kraftstufe), Schaden geistig."""
+    """GES + Waffenloser Kampf, Schaden geistig."""
     return DicePool(
         "Angriff (waffenlos)",
         (
             ("Geschick", attribute_value(npc, "Geschick")),
-            ("Waffenloser Kampf", npc.force),
+            ("Waffenloser Kampf", spirit_skill_rating(npc, "Waffenloser Kampf")),
         ),
         modifier,
         note=f"Schaden {npc.unarmed_damage}G",
@@ -488,20 +507,8 @@ def _magician_pools(
     return pools[:2] + [drain_pool(npc, modifier)] + pools[2:]
 
 
-def critter_attribute_pool(
-    npc: engine.Critter, label: str, attribute: str, modifier: int = 0
-) -> DicePool:
-    """Hausregel: Critter-Probe als Attribut + Attribut (Attribut x 2)."""
-    value = attribute_value(npc, attribute)
-    return DicePool(
-        label,
-        ((attribute, value), (label, value)),
-        modifier,
-    )
-
-
 def spirit_damage_resistance_pool(
-    npc: engine.Spirit, modifier: int = 0
+    npc: engine.Spirit | engine.Critter, modifier: int = 0
 ) -> DicePool:
     """Schadenswiderstand: Immunitaet 2xF, hoehere getragene Panzerung gewinnt."""
     immunity = engine.spirit_hardened_armor(npc.force)
@@ -523,27 +530,42 @@ def spirit_damage_resistance_pool(
     )
 
 
-def _spirit_pools(npc: engine.Spirit, modifier: int) -> list[DicePool]:
-    return [
+def _spirit_pools(
+    npc: engine.Spirit, skill_map: dict[str, str] | None, modifier: int
+) -> list[DicePool]:
+    pools = [
         defense_pool(npc, modifier),
         spirit_damage_resistance_pool(npc, modifier),
-        spirit_skill_pool(npc, "Wahrnehmung", "Intuition", modifier),
-        spirit_skill_pool(npc, "Astralkampf", "Willenskraft", modifier),
-        spirit_skill_pool(npc, "Schleichen", "Geschick", modifier),
         composure_pool(npc, modifier),
     ]
+    skills = getattr(npc, "skills", None) or {}
+    trained = [
+        skill for skill, rating in skills.items() if engine.to_int(rating) > 0
+    ]
+    pools.extend(skill_pool(npc, skill, skill_map, modifier) for skill in trained)
+    return pools
 
 
-def _critter_pools(npc: engine.Critter, modifier: int) -> list[DicePool]:
-    # Keine Fertigkeitswerte in der CSV: Hausregel Attribut x 2.
-    pools = [defense_pool(npc, modifier), damage_resistance_pool(npc, modifier)]
-    for label, attribute in (
-        ("Wahrnehmung", "Intuition"),
-        ("Waffenloser Kampf", "Geschick"),
-        ("Schleichen", "Geschick"),
-    ):
-        pools.append(critter_attribute_pool(npc, label, attribute, modifier))
-    pools.append(composure_pool(npc, modifier))
+def _critter_pools(
+    npc: engine.Critter, skill_map: dict[str, str] | None, modifier: int
+) -> list[DicePool]:
+    soak = (
+        spirit_damage_resistance_pool(npc, modifier)
+        if npc.uses_force
+        else damage_resistance_pool(npc, modifier)
+    )
+    pools = [
+        defense_pool(npc, modifier),
+        soak,
+        composure_pool(npc, modifier),
+    ]
+    skills = getattr(npc, "skills", None) or {}
+    trained = [
+        skill for skill, rating in skills.items() if engine.to_int(rating) > 0
+    ]
+    if not npc.uses_force:
+        trained = sorted(trained, key=lambda skill: skills[skill], reverse=True)
+    pools.extend(skill_pool(npc, skill, skill_map, modifier) for skill in trained)
     return pools
 
 
@@ -557,9 +579,9 @@ def standard_pools(
 ) -> list[DicePool]:
     """Die wichtigsten Pools des jeweiligen Archetyps, bereits fertig gerechnet."""
     if isinstance(npc, engine.Spirit):
-        pools = _spirit_pools(npc, modifier)
+        pools = _spirit_pools(npc, skill_map, modifier)
     elif isinstance(npc, engine.Critter):
-        pools = _critter_pools(npc, modifier)
+        pools = _critter_pools(npc, skill_map, modifier)
     elif isinstance(npc, engine.MagicianNPC):
         pools = _magician_pools(npc, skill_map, modifier)
     elif isinstance(npc, engine.MundaneNPC):

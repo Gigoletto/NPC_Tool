@@ -126,6 +126,19 @@ def to_float(value: object, default: float = 0.0) -> float:
     return float(match.group().replace(",", "."))
 
 
+def format_book_source(quelle: object, seite: object) -> str:
+    """Quelle und Seite als 'SR5 S. 402'; leere Teile werden weggelassen."""
+    book = to_text(quelle)
+    page = to_text(seite)
+    if book and page:
+        return f"{book} S. {page}"
+    if book:
+        return book
+    if page:
+        return f"S. {page}"
+    return ""
+
+
 def to_text(value: object, default: str = "") -> str:
     """Gibt CSV-Text bereinigt zurueck; leere Werte werden zum Standardtext."""
     if _is_missing(value):
@@ -134,10 +147,13 @@ def to_text(value: object, default: str = "") -> str:
 
 
 def normalize_skill_name(skill: str) -> str:
-    """Alte Saves mit 'Herbeirufen' auf 'Beschwoeren' umbiegen."""
-    if skill == "Herbeirufen":
-        return BESCHWOEREN
-    return skill
+    """Gleicht abweichende CSV-/Save-Namen an die Grunddaten an."""
+    aliases = {
+        "Herbeirufen": BESCHWOEREN,
+        "Bindung": "Binden",
+        "Cybertechnologie": "Kybernetik",
+    }
+    return aliases.get(skill, skill)
 
 
 def contains_force_reference(value: object) -> bool:
@@ -266,6 +282,48 @@ def spirit_hardened_armor(force: int) -> int:
     return 2 * max(1, int(force))
 
 
+# Grundfertigkeiten aller Geister; Extra-Fertigkeiten haengen am Geisttyp.
+SPIRIT_BASE_SKILLS: tuple[str, ...] = (
+    "Askennen",
+    "Astralkampf",
+    "Exotische Fernkampfwaffe",
+    "Waffenloser Kampf",
+    "Wahrnehmung",
+)
+
+
+def _fold_spirit_name(name: str) -> str:
+    """Vergleichstext ohne Umlaute, damit Geisttypen robust erkannt werden."""
+    return (
+        str(name)
+        .casefold()
+        .replace("\u00e4", "a")
+        .replace("\u00f6", "o")
+        .replace("\u00fc", "u")
+        .replace("\u00df", "ss")
+    )
+
+
+def spirit_skills_for(name: str) -> list[str]:
+    """Fertigkeiten eines Geistes: Grundset plus typspezifische Zugaben."""
+    key = _fold_spirit_name(name)
+    skills = list(SPIRIT_BASE_SKILLS)
+    if "feuer" in key or "luft" in key:
+        skills.append("Laufen")
+    if "menschen" in key or "ratgeber" in key:
+        skills.append("Spruchzauberei")
+    if "beschutzer" in key or "pflanzen" in key or "ratgeber" in key:
+        skills.append("Antimagie")
+    if "beschutzer" in key:
+        skills.append("Klingenwaffen")
+        skills.append("Kn\u00fcppel")
+    if "helfer" in key:
+        skills.append("Handwerk")
+    if "ratgeber" in key:
+        skills.append("Arkana")
+    return skills
+
+
 @dataclass(frozen=True)
 class Weapon:
     """Eine Waffe aus der Waffen-Datenbank."""
@@ -346,7 +404,7 @@ def load_armor(df: pd.DataFrame, name: str) -> Armor:
 
 def natural_armor_value(npc: "BaseNPC") -> int:
     """CSV- bzw. formelbasierter Panzerungswert, ohne getragene Ruestung."""
-    if isinstance(npc, Spirit):
+    if isinstance(npc, Spirit) or (isinstance(npc, Critter) and npc.uses_force):
         return spirit_hardened_armor(npc.force)
     if isinstance(npc, Critter):
         return npc.natural_armor()
@@ -485,9 +543,7 @@ class MundaneNPC(BaseNPC):
         self.armor = to_int(row.get("Panzerung"))
         self.edge = to_int(row.get("Edge"))
         self.skills = {
-            column: to_int(row[column])
-            for column in row.index
-            if column not in ATTRIBUTES and column not in NPC_META_COLUMNS
+            column: to_int(row[column]) for column in skill_names_from_row(row)
         }
 
     def details(self) -> dict[str, str]:
@@ -568,6 +624,8 @@ class Spirit(BaseNPC):
         self.powers = split_list(row.get("Standardkraft"))
         self.optional_powers = split_list(row.get("Optionale Kraft"))
         self.armor = spirit_hardened_armor(self.force)
+        self.magic = self.force
+        self.skills = {skill: self.force for skill in spirit_skills_for(name)}
 
     def _read_attributes(self, row: pd.Series) -> dict[str, int]:
         return {
@@ -618,7 +676,7 @@ class Critter(BaseNPC):
         super().__init__(name, row)
         self.category = to_text(row.get("Kategorie"), "-")
         self.armor = self.natural_armor()
-        self.source = f"{to_text(row.get('Quelle'), '-')} S. {to_text(row.get('Seite'), '-')}"
+        self.source = format_book_source(row.get("Quelle"), row.get("Seite"))
 
         force_value = self.force if self.uses_force else 0
         self.edge = (
@@ -632,14 +690,16 @@ class Critter(BaseNPC):
             else to_int(row.get("Magie"))
         )
         self._initiative_base = self._resolve_initiative(row)
-        self.initiative_dice = 1
+        self.initiative_dice = 2 if self.uses_force else 1
 
         if self.uses_force:
             self.formulas = {
                 attribute: to_text(row.get(attribute), "-") for attribute in ATTRIBUTES
             }
+            self.skills = {skill: self.force for skill in SPIRIT_BASE_SKILLS}
         else:
             self.formulas = {}
+            self.skills = {}
 
     def _resolve_initiative(self, row: pd.Series) -> int:
         raw = row.get("Initiative")
@@ -664,11 +724,10 @@ class Critter(BaseNPC):
         return super().natural_initiative_base()
 
     def natural_armor(self) -> int:
-        """Panzerung aus der Spalte Ruestung, Formeln mit der Kraftstufe."""
-        return evaluate_armor(
-            self.row.get(RUESTUNG),
-            self.force if self.uses_force else 0,
-        )
+        """Panzerung: Geister 2 x F, sonst Spalte Ruestung."""
+        if self.uses_force:
+            return spirit_hardened_armor(self.force)
+        return evaluate_armor(self.row.get(RUESTUNG), 0)
 
     def details(self) -> dict[str, str]:
         values = super().details()
@@ -732,6 +791,22 @@ def equip(
         npc.armor = to_int(armor_rating)
 
     return npc
+
+
+def skill_names_from_row(row: pd.Series) -> list[str]:
+    """Fertigkeitsspalten der NPC-Grunddaten in CSV-Reihenfolge."""
+    return [
+        str(column)
+        for column in row.index
+        if column not in ATTRIBUTES and column not in NPC_META_COLUMNS
+    ]
+
+
+def catalog_skill_names(df: pd.DataFrame | None) -> list[str]:
+    """Fertigkeitskatalog aus den NPC-Grunddaten, fuer Critter ohne eigene Spalten."""
+    if df is None or df.empty:
+        return []
+    return skill_names_from_row(df.iloc[0])
 
 
 def uses_metatype(archetype: str) -> bool:
